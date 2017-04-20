@@ -1,6 +1,10 @@
 package mx.com.stsystems.CMH.Beta.dto;
 
-public class Telefono {
+import java.io.Serializable;
+
+public class Telefono implements Serializable {
+	private static final long serialVersionUID = -6858255933418616742L;
+	
 	private String idTelefono;
 	private String numero;
 	private String descripcion;

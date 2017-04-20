@@ -2,9 +2,11 @@ package mx.com.stsystems.CMH.Beta.web.rest.api.resources.impl;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -17,37 +19,36 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import mx.com.stsystems.CMH.Beta.dto.Telefono;
+import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Track;
-import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceController;
+import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
 @Path("/Music")
 public class ConsultaResourceImpl {
 	private Map<Integer, Track> trackMap = new HashMap<Integer, Track>();
 	private Track track = new Track();
-	private static ServiceController serviceController;
 	
-	static {
-		@SuppressWarnings("resource")
-		ApplicationContext context = new ClassPathXmlApplicationContext("SpringContext.xml");
-		serviceController = (ServiceController) context.getBean("DAO");
-	}
 	
 	@POST
-	@Path("/Genre")
+	@Path("/ConsultaHospitalesPorEstado")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postGenre() {
+	public String postConsultaHospitalesPorEstado(String mensaje) {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
-
-		Telefono telefono = serviceController.solicitaTelefono("1");
+		ServiceControllerImpl serviceController = new ServiceControllerImpl();
 		
 		try {
-			jsonInString = mapper.writeValueAsString(telefono);
-			System.out.println("VAR: telefono: " + jsonInString);
+			System.out.println("VAR: mensaje: " + mensaje);
+
+			MensajeEstado mensajeEstado = mapper.readValue(mensaje, MensajeEstado.class);
+			System.out.println("VAR: mensajeEstado: " + mensajeEstado);
+			
+			List<Hospital> hospitales = serviceController.solicitaHopitalesPorEstado(mensajeEstado.getEstado());
+			
+			jsonInString = mapper.writeValueAsString(hospitales);
+			System.out.println("VAR: hospitales: " + jsonInString);
 		} catch (IOException e) {
 			System.err.println("Error de conversion de JSON");
 		}
@@ -131,5 +132,22 @@ public class ConsultaResourceImpl {
 		track.setSinger("Forbbiden");
 		trackMap.put(track.getId(), track);
 	}
-	
+
+}
+
+class MensajeEstado {
+	private String estado;
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	@Override
+	public String toString() {
+		return "MensajeEstado [estado=" + estado + "]";
+	}
 }
