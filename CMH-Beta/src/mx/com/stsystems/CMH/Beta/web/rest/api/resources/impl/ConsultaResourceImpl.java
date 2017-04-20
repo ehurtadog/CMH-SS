@@ -20,6 +20,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import mx.com.stsystems.CMH.Beta.dto.Telefono;
 import mx.com.stsystems.CMH.Beta.dto.Track;
 import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceController;
 
@@ -42,15 +43,11 @@ public class ConsultaResourceImpl {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
 
-		serviceController.solicitaTelefono("1");
+		Telefono telefono = serviceController.solicitaTelefono("1");
 		
 		try {
-			track = new Track();
-			track.setId(50);
-			track.setTitle("Genre");
-			track.setSinger("Genre");
-			jsonInString = mapper.writeValueAsString(track);
-			System.out.println("VAR: jsonInString: " + jsonInString);
+			jsonInString = mapper.writeValueAsString(telefono);
+			System.out.println("VAR: telefono: " + jsonInString);
 		} catch (IOException e) {
 			System.err.println("Error de conversion de JSON");
 		}
