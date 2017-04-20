@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+ 
+    <!-- to activate annotations in beans already registered in the application context -->
+    <context:annotation-config />
+ 
+    <!-- dataSource configuration -->
+    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="jdbc/CMH-SS_Pool" />
+    </bean>
+ 
+    <!-- jdbcTemplate uses dataSource -->
+<!--     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"> -->
+<!--         <property name="dataSource" ref="dataSource" /> -->
+<!--     </bean> -->
+
+    <bean id="DAO" class="mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceController">
+<!--         <property name="dataSource" ref="dataSource" /> -->
+		<constructor-arg ref="dataSource" />
+    </bean>
+    <!-- scans packages to find and register beans within the application context -->
+    <context:component-scan base-package="mx.com.stsystems.CMH.Beta.web.controller.service.impl" />
+</beans>
