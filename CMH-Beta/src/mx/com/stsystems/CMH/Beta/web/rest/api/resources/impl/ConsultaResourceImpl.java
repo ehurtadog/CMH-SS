@@ -24,25 +24,25 @@ import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Track;
 import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
-@Path("/Music")
+@Path("/Consulta")
 public class ConsultaResourceImpl {
 	private Map<Integer, Track> trackMap = new HashMap<Integer, Track>();
 	private Track track = new Track();
 	
 	
 	@POST
-	@Path("/ConsultaHospitalesPorEstado")
+	@Path("/HospitalesPorEstado")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postConsultaHospitalesPorEstado(String mensaje) {
+	public String postConsultaHospitalesPorEstado(String estado) {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
 		ServiceControllerImpl serviceController = new ServiceControllerImpl();
 		
 		try {
-			System.out.println("VAR: mensaje: " + mensaje);
+			System.out.println("VAR: mensaje: " + estado);
 
-			MensajeEstado mensajeEstado = mapper.readValue(mensaje, MensajeEstado.class);
+			MensajeEstado mensajeEstado = mapper.readValue(estado, MensajeEstado.class);
 			System.out.println("VAR: mensajeEstado: " + mensajeEstado);
 			
 			List<Hospital> hospitales = serviceController.solicitaHopitalesPorEstado(mensajeEstado.getEstado());
