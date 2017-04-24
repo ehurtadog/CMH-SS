@@ -20,8 +20,12 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Track;
+import mx.com.stsystems.CMH.Beta.json.messages.MensajeCodigPostal;
+import mx.com.stsystems.CMH.Beta.json.messages.MensajeEstado;
+import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
 import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
 @Path("/Consulta")
@@ -34,10 +38,10 @@ public class ConsultaResourceImpl {
 	@Path("/HospitalesPorEstado")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postConsultaHospitalesPorEstado(String estado) {
+	public String postHospitalesPorEstado(String estado) {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
-		ServiceControllerImpl serviceController = new ServiceControllerImpl();
+		ServiceController serviceController = new ServiceControllerImpl();
 		
 		try {
 			System.out.println("VAR: mensaje: " + estado);
@@ -50,6 +54,31 @@ public class ConsultaResourceImpl {
 			jsonInString = mapper.writeValueAsString(hospitales);
 			System.out.println("VAR: hospitales: " + jsonInString);
 		} catch (IOException e) {
+			System.err.println("Error de conversion de JSON");
+		}
+		
+		return jsonInString;
+	}
+	
+	@POST
+	@Path("/AsentamientosPorCodigoPostal")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postAsentamientosPorCodigoPostal(String codigoPostal) {
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = null;
+		ServiceController serviceController = new ServiceControllerImpl();
+		
+		try {
+			System.out.println("VAR: codigoPostal: " + codigoPostal);
+			
+			MensajeCodigPostal mensajeCodigoPostal = mapper.readValue(codigoPostal, MensajeCodigPostal.class);
+			System.out.println("VAR: mensajeCodigoPostal: " + mensajeCodigoPostal);
+			
+			List<CodigoPostal> codigosPostales = serviceController.solicitaAsentamientosPorCodigoPostal(mensajeCodigoPostal.getCodigoPostal());
+			
+			jsonInString = mapper.writeValueAsString(codigosPostales);
+		} catch (IOException ioe) {
 			System.err.println("Error de conversion de JSON");
 		}
 		
@@ -133,21 +162,4 @@ public class ConsultaResourceImpl {
 		trackMap.put(track.getId(), track);
 	}
 
-}
-
-class MensajeEstado {
-	private String estado;
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	@Override
-	public String toString() {
-		return "MensajeEstado [estado=" + estado + "]";
-	}
 }
