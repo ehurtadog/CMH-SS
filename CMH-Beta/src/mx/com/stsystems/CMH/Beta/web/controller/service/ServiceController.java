@@ -4,8 +4,11 @@ import java.util.List;
 
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
+import mx.com.stsystems.CMH.Beta.dto.Paciente;
+import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 
 public interface ServiceController {
 	public List<Hospital> solicitaHopitalesPorEstado(String estado);
 	public List<CodigoPostal> solicitaAsentamientosPorCodigoPostal(String codigoPostal);
+	public long registraPaciente(Paciente paciente) throws SumarSaludException;
 }

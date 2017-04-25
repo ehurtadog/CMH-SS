@@ -17,9 +17,15 @@
     <bean id="hospitalDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.HospitalDAOImpl">
 		<constructor-arg ref="dataSource" />
     </bean>
+    
     <bean id="codigoPostalDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.CodigoPostalDAOImpl">
 		<constructor-arg ref="dataSource" />
     </bean>
+    
+    <bean id="pacienteDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.PacienteDAOImpl">
+		<constructor-arg ref="dataSource" />
+    </bean>
+    
     <!-- scans packages to find and register beans within the application context -->
     <context:component-scan base-package="mx.com.stsystems.CMH.Beta.web.controller.service.impl" />
 </beans>

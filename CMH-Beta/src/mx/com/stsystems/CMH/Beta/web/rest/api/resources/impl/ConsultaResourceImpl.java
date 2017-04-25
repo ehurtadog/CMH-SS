@@ -23,8 +23,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Track;
-import mx.com.stsystems.CMH.Beta.json.messages.MensajeCodigPostal;
-import mx.com.stsystems.CMH.Beta.json.messages.MensajeEstado;
+import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeCodigPostal;
+import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeEstado;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
 import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 

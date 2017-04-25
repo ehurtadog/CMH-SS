@@ -1,10 +1,10 @@
-package mx.com.stsystems.CMH.Beta.json.messages;
+package mx.com.stsystems.CMH.Beta.json.messages.request;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MensajeRegistroUsuario implements Serializable {
+public class MensajeRegistroPaciente implements Serializable {
 	private static final long serialVersionUID = -7609391023543295988L;
 
 	private String numCliente;

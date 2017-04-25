@@ -1,4 +1,4 @@
-package mx.com.stsystems.CMH.Beta.json.messages;
+package mx.com.stsystems.CMH.Beta.json.messages.request;
 
 public class MensajeEstado {
 	private String estado;
