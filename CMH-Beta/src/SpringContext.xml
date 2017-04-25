@@ -26,6 +26,10 @@
 		<constructor-arg ref="dataSource" />
     </bean>
     
+    <bean id="estadoCivilDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.EstadoCivilDAOImpl">
+		<constructor-arg ref="dataSource" />
+    </bean>
+    
     <!-- scans packages to find and register beans within the application context -->
     <context:component-scan base-package="mx.com.stsystems.CMH.Beta.web.controller.service.impl" />
 </beans>

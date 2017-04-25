@@ -22,7 +22,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
+import mx.com.stsystems.CMH.Beta.dto.Paciente;
 import mx.com.stsystems.CMH.Beta.dto.Track;
+import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeCodigPostal;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeEstado;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
@@ -78,6 +80,40 @@ public class ConsultaResourceImpl {
 			List<CodigoPostal> codigosPostales = serviceController.solicitaAsentamientosPorCodigoPostal(mensajeCodigoPostal.getCodigoPostal());
 			
 			jsonInString = mapper.writeValueAsString(codigosPostales);
+		} catch (IOException ioe) {
+			System.err.println("Error de conversion de JSON");
+		}
+		
+		return jsonInString;
+	}
+	
+	@POST
+	@Path("/Paciente/{idFiliacion}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String postPacientePorIdFiliacion(@PathParam("idFiliacion") long idFiliacion) {
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = null;
+		ServiceController serviceController = new ServiceControllerImpl();
+		Paciente paciente = null;
+		
+		try {
+			System.out.println("VAR: idFiliacion: " + idFiliacion);
+
+			paciente = serviceController.solicitaPacientePorIdFiliacion(idFiliacion);
+		} catch (SumarSaludException sse) {
+			System.err.println("Error en la consulta del paciente.");
+		}
+		
+		if (paciente == null) {
+			paciente = new Paciente();
+			paciente.setIdFiliacion(0);
+			paciente.setNombres("PACIENTE INEXISTENTE");
+			paciente.setApellidoPaterno("PACIENTE INEXISTENTE");
+			paciente.setApellidoMaterno("PACIENTE INEXISTENTE");
+		}
+		
+		try {
+			jsonInString = mapper.writeValueAsString(paciente);
 		} catch (IOException ioe) {
 			System.err.println("Error de conversion de JSON");
 		}

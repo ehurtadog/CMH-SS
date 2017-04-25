@@ -3,8 +3,11 @@ package mx.com.stsystems.CMH.Beta.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.CMH.Beta.util.Global;
+import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
+import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
 public class Paciente implements Serializable {
 	private static final long serialVersionUID = -4851381970808864769L;
@@ -27,6 +30,8 @@ public class Paciente implements Serializable {
 	}
 	
 	public Paciente(MensajeRegistroPaciente mensaje) {
+		ServiceController serviceController = new ServiceControllerImpl();
+		
 		this.idPaciente = Global.getUUID();
 		this.idFiliacion = 0;
 		this.nombres = mensaje.getNombresCliente();
@@ -37,7 +42,13 @@ public class Paciente implements Serializable {
 		this.peso = mensaje.getPeso();
 		this.altura = mensaje.getAltura();
 		this.correoElectronico = mensaje.getCorreo();
-		this.idEstadoCivil = "7BAE03972A48DD59870C3FDA44B265FF";
+		
+		try {
+			this.idEstadoCivil = serviceController.solicitaEstadoCivilPorDescripcion("SIN ESTADO CIVIL").getIdEstadoCivil();
+		} catch (SumarSaludException sse) {
+			this.idEstadoCivil = "7BAE03972A48DD59870C3FDA44B265FF";
+		}
+		
 		this.idTipoSangre = "D6DCB896498918D2F006564303FE0C14";
 	}
 

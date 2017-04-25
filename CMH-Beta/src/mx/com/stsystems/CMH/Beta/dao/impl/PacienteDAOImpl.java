@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import mx.com.stsystems.CMH.Beta.dao.PacienteDAO;
 import mx.com.stsystems.CMH.Beta.dto.Paciente;
+import mx.com.stsystems.CMH.Beta.dto.mappers.PacienteMapper;
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 
 public class PacienteDAOImpl implements PacienteDAO {
@@ -55,6 +56,50 @@ public class PacienteDAOImpl implements PacienteDAO {
 		}
 			
 		return idFiliacion;
+	}
+	
+	@Override
+	public boolean buscaPacientePorCorreoElectronico(String correoElectronico) {
+		boolean resultado = true;
+		StringBuilder QRY_BUSCA_PACIENTE_POR_CORREO = new StringBuilder()
+			.append("SELECT COUNT(1) ")
+			.append(" FROM paciente ")
+			.append(" WHERE CORREOELECTRONICO = ? ");
+		
+		try {
+			int contador = jdbcTemplate.queryForObject(QRY_BUSCA_PACIENTE_POR_CORREO.toString(), 
+				new Object[] { correoElectronico }, Integer.class);
+			
+			if (contador == 0) {
+				resultado = false;
+			}
+		} catch (DataAccessException dae) {
+			System.err.println("Ocurrio un error al consultar el paciente por correo electrónico: " + dae);
+		}
+		
+		return resultado;
+	}
+	
+	@Override
+	public Paciente consultaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException {
+		Paciente paciente = null;
+		StringBuilder QRY_CONSULTA_PACIENTE_POR_IDFILIACION = new StringBuilder()
+			.append("SELECT ")
+			.append("   IDPACIENTE, IDFILIACION, NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO, SEXO, ")
+			.append("   FECHANACIMIENTO, PESO, ALTURA, CORREOELECTRONICO, IDESTADOCIVIL, IDTIPOSANGRE ")
+			.append(" FROM paciente ")
+			.append(" WHERE IDFILIACION = ? ");
+		
+		try {
+			paciente = jdbcTemplate.queryForObject(QRY_CONSULTA_PACIENTE_POR_IDFILIACION.toString(), new Object[] { idFiliacion }, 
+				new PacienteMapper());
+		} catch (DataAccessException dae) {
+			String mensajeDeError = "Ocurrió un error al consulta un paciente por el id de filiación: " + dae;
+			System.err.println(mensajeDeError);
+			throw new SumarSaludException(mensajeDeError);
+		}
+		
+		return paciente;
 	}
 
 }

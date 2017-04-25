@@ -25,7 +25,7 @@ public class RegistroResourceImpl {
 	@Path("/Paciente")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postUsuario(String registroUsuario) {
+	public String postUsuario(String registroPaciente) {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
 		ServiceController serviceController = new ServiceControllerImpl();
@@ -36,29 +36,36 @@ public class RegistroResourceImpl {
 		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 		
 		try {
-			System.out.println("VAR: registroUsuario: " + registroUsuario);
+			System.out.println("VAR: registroPaciente: " + registroPaciente);
 
-			mensajeRegistroPaciente = mapper.readValue(registroUsuario, MensajeRegistroPaciente.class);
-			System.out.println("VAR: mensajeRegistroUsuario: " + mensajeRegistroPaciente);
+			mensajeRegistroPaciente = mapper.readValue(registroPaciente, MensajeRegistroPaciente.class);
+			System.out.println("VAR: mensajeRegistroPaciente: " + mensajeRegistroPaciente);
 		} catch (IOException ioe) {
 			System.err.println("Error de conversion de JSON: " + ioe);
 		}
 		
-		try {
-			Paciente paciente = new Paciente(mensajeRegistroPaciente);
-			idFiliacion = serviceController.registraPaciente(paciente);
-			
-			mensajeRegistroPacienteResponse.setEstatus(0);
-			mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
-			mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
-			mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
-		} catch (SumarSaludException sse) {
+		if (!serviceController.existePacientePorCorreoElectronico(mensajeRegistroPaciente.getCorreo())) {
+			try {
+				Paciente paciente = new Paciente(mensajeRegistroPaciente);
+				idFiliacion = serviceController.registraPaciente(paciente);
+				
+				mensajeRegistroPacienteResponse.setEstatus(0);
+				mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
+				mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
+				mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+			} catch (SumarSaludException sse) {
+				mensajeRegistroPacienteResponse.setEstatus(1);
+				mensajeRegistroPacienteResponse.setIdFiliacion(0);
+				mensajeRegistroPacienteResponse.setDescripcion("ERROR AL REGISTRAR AL PACIENTE");
+				mensajeRegistroPacienteResponse.setComentarios(sse.toString());
+			}
+		} else {
 			mensajeRegistroPacienteResponse.setEstatus(1);
 			mensajeRegistroPacienteResponse.setIdFiliacion(0);
 			mensajeRegistroPacienteResponse.setDescripcion("ERROR AL REGISTRAR AL PACIENTE");
-			mensajeRegistroPacienteResponse.setComentarios(sse.toString());
+			mensajeRegistroPacienteResponse.setComentarios("EL PACIENTE YA ESTA REGISTRADO EN LA BASE DE DATOS");
 		}
-		
+			
 		try {
 			System.out.println("VAR: mensajeRegistroPacienteResponse: " + mensajeRegistroPacienteResponse);
 

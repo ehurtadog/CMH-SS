@@ -5,4 +5,6 @@ import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 
 public interface PacienteDAO {
 	public long registraPaciente(Paciente paciente) throws SumarSaludException;
+	public boolean buscaPacientePorCorreoElectronico(String correoElectronico);
+	public Paciente consultaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException;
 }
