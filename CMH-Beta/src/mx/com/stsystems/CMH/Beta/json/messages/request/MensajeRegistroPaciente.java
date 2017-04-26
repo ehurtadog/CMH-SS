@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import mx.com.stsystems.CMH.Beta.dto.Antecedente;
+import mx.com.stsystems.CMH.Beta.dto.Paciente;
+
 public class MensajeRegistroPaciente implements Serializable {
 	private static final long serialVersionUID = -7609391023543295988L;
 
@@ -32,6 +37,37 @@ public class MensajeRegistroPaciente implements Serializable {
 	private String cancerFam;
 	private String infartoFam;
 	private int tipoAcceso;
+	
+	public MensajeRegistroPaciente() {
+	}
+	
+	public MensajeRegistroPaciente(Paciente paciente, Antecedente antecedente) {
+		this.numCliente = String.valueOf(paciente.getIdFiliacion());
+		this.password = "SIN PASSWORD";
+		this.nombresCliente = paciente.getNombres();
+		this.apellidosCliente = paciente.getApellidoPaterno() + " " + paciente.getApellidoMaterno();
+		this.correo = paciente.getCorreoElectronico();
+		this.genero = paciente.getSexo();
+		this.tseguro = 0;
+		this.fechaNacimiento = paciente.getFechaNacimiento();
+		this.peso = paciente.getPeso();
+		this.altura = paciente.getAltura();
+		this.hipertension = antecedente.getHipertension();
+		this.diabetes = antecedente.getDiabetes();
+		this.hipertiroidismo = antecedente.getHipertiroidismo();
+		this.fumas = antecedente.getTabaquismo();
+		this.frecuenciaFuma = antecedente.getTabaquismoFrecuencia();
+		this.tomAlcohol = antecedente.getAlcoholismo();
+		this.frecuenciaTomAlcohol = antecedente.getAlcoholismoFrecuencia();
+		this.ejercicio = antecedente.getEjercicio();
+		this.frecuenciaEjercicio = antecedente.getEjercicioFrecuencia();
+		this.hipertensionFam = antecedente.getHipertensionFamiliar();
+		this.diabetesFam = antecedente.getDiabetesFamiliar();
+		this.hipertiroidismoFam = antecedente.getHipertiroidismoFamiliar();
+		this.cancerFam = antecedente.getCancerFamiliar();
+		this.infartoFam = antecedente.getInfartoFamiliar();
+		this.tipoAcceso = 0;
+	}
 
 	public String getNumCliente() {
 		return this.numCliente;
@@ -93,6 +129,7 @@ public class MensajeRegistroPaciente implements Serializable {
 		return this.fechaNacimiento;
 	}
 	
+	@JsonIgnore
 	public String getFechaNacimientoAsString() {
 		if (this.fechaNacimiento != null) {
 			return new SimpleDateFormat("dd-MM-YYYY").format(this.fechaNacimiento);

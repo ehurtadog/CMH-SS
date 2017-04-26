@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import mx.com.stsystems.CMH.Beta.dao.AntecedenteDAO;
 import mx.com.stsystems.CMH.Beta.dao.CodigoPostalDAO;
 import mx.com.stsystems.CMH.Beta.dao.EstadoCivilDAO;
 import mx.com.stsystems.CMH.Beta.dao.HospitalDAO;
 import mx.com.stsystems.CMH.Beta.dao.PacienteDAO;
+import mx.com.stsystems.CMH.Beta.dto.Antecedente;
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.EstadoCivil;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
@@ -21,6 +23,7 @@ public class ServiceControllerImpl implements ServiceController {
 	private static HospitalDAO hospitalDAO;
 	private static CodigoPostalDAO codigoPostalDAO;
 	private static PacienteDAO pacienteDAO;
+	private static AntecedenteDAO antecedenteDAO;
 	private static EstadoCivilDAO estadoCivilDAO;
 	
 	static {
@@ -29,6 +32,7 @@ public class ServiceControllerImpl implements ServiceController {
 		hospitalDAO = (HospitalDAO) context.getBean("hospitalDAO");
 		codigoPostalDAO = (CodigoPostalDAO) context.getBean("codigoPostalDAO");
 		pacienteDAO = (PacienteDAO) context.getBean("pacienteDAO");
+		antecedenteDAO = (AntecedenteDAO) context.getBean("antecedenteDAO");
 		estadoCivilDAO = (EstadoCivilDAO) context.getBean("estadoCivilDAO");
 	}
 	
@@ -58,6 +62,11 @@ public class ServiceControllerImpl implements ServiceController {
 	@Override
 	public Paciente solicitaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException {
 		return pacienteDAO.consultaPacientePorIdFiliacion(idFiliacion);
+	}
+	
+	@Override
+	public Antecedente solicitaAntecedentePorIdPaciente(String idPaciente) throws SumarSaludException {
+		return antecedenteDAO.consultaAntecedentePorIdPaciente(idPaciente);
 	}
 	
 	@Override 

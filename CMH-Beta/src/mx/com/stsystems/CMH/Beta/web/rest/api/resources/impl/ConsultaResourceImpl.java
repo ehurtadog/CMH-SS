@@ -1,6 +1,7 @@
 package mx.com.stsystems.CMH.Beta.web.rest.api.resources.impl;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import mx.com.stsystems.CMH.Beta.dto.Antecedente;
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Paciente;
@@ -27,6 +29,7 @@ import mx.com.stsystems.CMH.Beta.dto.Track;
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeCodigPostal;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeEstado;
+import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
 import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
@@ -95,11 +98,15 @@ public class ConsultaResourceImpl {
 		String jsonInString = null;
 		ServiceController serviceController = new ServiceControllerImpl();
 		Paciente paciente = null;
+		Antecedente antecedente = null;
+		
+		mapper.setDateFormat(new SimpleDateFormat("dd-MM-yyyy"));
 		
 		try {
 			System.out.println("VAR: idFiliacion: " + idFiliacion);
 
 			paciente = serviceController.solicitaPacientePorIdFiliacion(idFiliacion);
+			antecedente = serviceController.solicitaAntecedentePorIdPaciente(paciente.getIdPaciente());
 		} catch (SumarSaludException sse) {
 			System.err.println("Error en la consulta del paciente.");
 		}
@@ -110,10 +117,14 @@ public class ConsultaResourceImpl {
 			paciente.setNombres("PACIENTE INEXISTENTE");
 			paciente.setApellidoPaterno("PACIENTE INEXISTENTE");
 			paciente.setApellidoMaterno("PACIENTE INEXISTENTE");
-		}
+			antecedente = new Antecedente();
+		} 
 		
 		try {
-			jsonInString = mapper.writeValueAsString(paciente);
+			MensajeRegistroPaciente registroPaciente = new MensajeRegistroPaciente(paciente, antecedente);
+			jsonInString = mapper.writeValueAsString(registroPaciente);
+			
+			System.out.println("VAR: jsonInString: " + jsonInString);
 		} catch (IOException ioe) {
 			System.err.println("Error de conversion de JSON");
 		}

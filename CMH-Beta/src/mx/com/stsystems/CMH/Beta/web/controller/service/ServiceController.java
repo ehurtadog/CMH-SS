@@ -2,6 +2,7 @@ package mx.com.stsystems.CMH.Beta.web.controller.service;
 
 import java.util.List;
 
+import mx.com.stsystems.CMH.Beta.dto.Antecedente;
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.EstadoCivil;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
@@ -17,6 +18,8 @@ public interface ServiceController {
 	public long registraPaciente(MensajeRegistroPaciente registroPaciente) throws SumarSaludException;
 	public boolean existePacientePorCorreoElectronico(String correoElectronico);
 	public Paciente solicitaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException;
+	
+	public Antecedente solicitaAntecedentePorIdPaciente(String idPaciente) throws SumarSaludException;
 	
 	public EstadoCivil solicitaEstadoCivilPorDescripcion(String descripcion) throws SumarSaludException;
 }
