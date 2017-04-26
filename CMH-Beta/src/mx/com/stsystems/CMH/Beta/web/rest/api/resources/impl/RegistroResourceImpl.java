@@ -10,16 +10,23 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import mx.com.stsystems.CMH.Beta.dto.Paciente;
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.CMH.Beta.json.messages.response.MensajeRegistroPacienteResponse;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
-import mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl;
 
 @Path("/Registro")
 public class RegistroResourceImpl {
+	private static ServiceController serviceController;
+	
+	static {
+		@SuppressWarnings("resource")
+		ApplicationContext context = new ClassPathXmlApplicationContext("SpringContext.xml");
+		serviceController = (ServiceController) context.getBean("serviceController");
+	}
 	
 	@POST
 	@Path("/Paciente")
@@ -28,7 +35,6 @@ public class RegistroResourceImpl {
 	public String postUsuario(String registroPaciente) {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
-		ServiceController serviceController = new ServiceControllerImpl();
 		MensajeRegistroPaciente mensajeRegistroPaciente = null;
 		MensajeRegistroPacienteResponse mensajeRegistroPacienteResponse = new MensajeRegistroPacienteResponse();
 		long idFiliacion = 0;
@@ -46,8 +52,8 @@ public class RegistroResourceImpl {
 		
 		if (!serviceController.existePacientePorCorreoElectronico(mensajeRegistroPaciente.getCorreo())) {
 			try {
-				Paciente paciente = new Paciente(mensajeRegistroPaciente);
-				idFiliacion = serviceController.registraPaciente(paciente);
+				
+				idFiliacion = serviceController.registraPaciente(mensajeRegistroPaciente);
 				
 				mensajeRegistroPacienteResponse.setEstatus(0);
 				mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);

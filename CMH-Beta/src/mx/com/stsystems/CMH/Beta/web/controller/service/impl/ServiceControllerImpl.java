@@ -14,6 +14,7 @@ import mx.com.stsystems.CMH.Beta.dto.EstadoCivil;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Paciente;
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
+import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
 
 public class ServiceControllerImpl implements ServiceController {
@@ -31,6 +32,9 @@ public class ServiceControllerImpl implements ServiceController {
 		estadoCivilDAO = (EstadoCivilDAO) context.getBean("estadoCivilDAO");
 	}
 	
+	public ServiceControllerImpl() {
+	}
+	
 	@Override
 	public List<Hospital> solicitaHopitalesPorEstado(String estado) {
 		return hospitalDAO.consultaHospitalesPorEstado(estado);
@@ -42,8 +46,8 @@ public class ServiceControllerImpl implements ServiceController {
 	}
 	
 	@Override
-	public long registraPaciente(Paciente paciente) throws SumarSaludException {
-		return pacienteDAO.registraPaciente(paciente);
+	public long registraPaciente(MensajeRegistroPaciente registroPaciente) throws SumarSaludException {
+		return pacienteDAO.registraPaciente(registroPaciente);
 	}
 	
 	@Override
