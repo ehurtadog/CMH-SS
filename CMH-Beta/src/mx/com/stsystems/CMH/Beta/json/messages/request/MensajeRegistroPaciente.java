@@ -15,13 +15,16 @@ public class MensajeRegistroPaciente implements Serializable {
 	private String numCliente;
 	private String password;
 	private String nombresCliente;
-	private String apellidosCliente;
+	private String apellidoPat;
+	private String apellidoMat;
 	private String correo;
 	private String genero;
 	private int tseguro;
 	private Date fechaNacimiento;
 	private float peso;
 	private float altura;
+	private String tipoSangre;
+	private String donadorSangre;
 	private String hipertension;
 	private String diabetes;
 	private String hipertiroidismo;
@@ -45,13 +48,16 @@ public class MensajeRegistroPaciente implements Serializable {
 		this.numCliente = String.valueOf(paciente.getIdFiliacion());
 		this.password = "SIN PASSWORD";
 		this.nombresCliente = paciente.getNombres();
-		this.apellidosCliente = paciente.getApellidoPaterno() + " " + paciente.getApellidoMaterno();
+		this.apellidoPat = paciente.getApellidoPaterno();
+		this.apellidoMat = paciente.getApellidoMaterno();
 		this.correo = paciente.getCorreoElectronico();
 		this.genero = paciente.getSexo();
 		this.tseguro = 0;
 		this.fechaNacimiento = paciente.getFechaNacimiento();
 		this.peso = paciente.getPeso();
 		this.altura = paciente.getAltura();
+		this.donadorSangre = paciente.getDonadorSangre();
+		this.tipoSangre = paciente.getTipoSangre();
 		this.hipertension = antecedente.getHipertension();
 		this.diabetes = antecedente.getDiabetes();
 		this.hipertiroidismo = antecedente.getHipertiroidismo();
@@ -93,12 +99,20 @@ public class MensajeRegistroPaciente implements Serializable {
 		this.nombresCliente = nombresCliente;
 	}
 
-	public String getApellidosCliente() {
-		return this.apellidosCliente;
+	public String getApellidoPat() {
+		return this.apellidoPat;
 	}
 
-	public void setApellidosCliente(String apellidosCliente) {
-		this.apellidosCliente = apellidosCliente;
+	public void setApellidoPat(String apellidoPat) {
+		this.apellidoPat = apellidoPat;
+	}
+
+	public String getApellidoMat() {
+		return apellidoMat;
+	}
+
+	public void setApellidoMat(String apellidoMat) {
+		this.apellidoMat = apellidoMat;
 	}
 
 	public String getCorreo() {
@@ -156,6 +170,22 @@ public class MensajeRegistroPaciente implements Serializable {
 
 	public void setAltura(float altura) {
 		this.altura = altura;
+	}
+
+	public String getTipoSangre() {
+		return tipoSangre;
+	}
+
+	public void setTipoSangre(String tipoSangre) {
+		this.tipoSangre = tipoSangre;
+	}
+
+	public String getDonadorSangre() {
+		return donadorSangre;
+	}
+
+	public void setDonadorSangre(String donadorSangre) {
+		this.donadorSangre = donadorSangre;
 	}
 
 	public String getHipertension() {
@@ -280,14 +310,64 @@ public class MensajeRegistroPaciente implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MensajeRegistroUsuario [numCliente=" + numCliente + ", password=" + password + ", nombresCliente="
-				+ nombresCliente + ", \napellidosCliente=" + apellidosCliente + ", correo=" + correo + ", genero="
-				+ genero + ", \ntseguro=" + tseguro + ", fechaNacimiento=" + getFechaNacimientoAsString() + ", peso=" + peso
-				+ ", \naltura=" + altura + ", hipertension=" + hipertension + ", diabetes=" + diabetes
-				+ ", \nhipertiroidismo=" + hipertiroidismo + ", fumas=" + fumas + ", frecuenciaFuma=" + frecuenciaFuma
-				+ ", \ntomAlcohol=" + tomAlcohol + ", frecuenciaTomAlcohol=" + frecuenciaTomAlcohol + ", ejercicio="
-				+ ejercicio + ", \nfrecuenciaEjercicio=" + frecuenciaEjercicio + ", hipertensionFam=" + hipertensionFam
-				+ ", diabetesFam=" + diabetesFam + ", \nhipertiroidismoFam=" + hipertiroidismoFam + ", cancerFam="
-				+ cancerFam + ", infartoFam=" + infartoFam + ", \ntipoAcceso=" + tipoAcceso + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("MensajeRegistroPaciente [numCliente=");
+		builder.append(numCliente);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", nombresCliente=");
+		builder.append(nombresCliente);
+		builder.append(", apellidoPat=");
+		builder.append(apellidoPat);
+		builder.append(", apellidoMat=");
+		builder.append(apellidoMat);
+		builder.append(", correo=");
+		builder.append(correo);
+		builder.append(", genero=");
+		builder.append(genero);
+		builder.append(", tseguro=");
+		builder.append(tseguro);
+		builder.append(", fechaNacimiento=");
+		builder.append(fechaNacimiento);
+		builder.append(", peso=");
+		builder.append(peso);
+		builder.append(", altura=");
+		builder.append(altura);
+		builder.append(", tipoSangre=");
+		builder.append(tipoSangre);
+		builder.append(", donadorSangre=");
+		builder.append(donadorSangre);
+		builder.append(", hipertension=");
+		builder.append(hipertension);
+		builder.append(", diabetes=");
+		builder.append(diabetes);
+		builder.append(", hipertiroidismo=");
+		builder.append(hipertiroidismo);
+		builder.append(", fumas=");
+		builder.append(fumas);
+		builder.append(", frecuenciaFuma=");
+		builder.append(frecuenciaFuma);
+		builder.append(", tomAlcohol=");
+		builder.append(tomAlcohol);
+		builder.append(", frecuenciaTomAlcohol=");
+		builder.append(frecuenciaTomAlcohol);
+		builder.append(", ejercicio=");
+		builder.append(ejercicio);
+		builder.append(", frecuenciaEjercicio=");
+		builder.append(frecuenciaEjercicio);
+		builder.append(", hipertensionFam=");
+		builder.append(hipertensionFam);
+		builder.append(", diabetesFam=");
+		builder.append(diabetesFam);
+		builder.append(", hipertiroidismoFam=");
+		builder.append(hipertiroidismoFam);
+		builder.append(", cancerFam=");
+		builder.append(cancerFam);
+		builder.append(", infartoFam=");
+		builder.append(infartoFam);
+		builder.append(", tipoAcceso=");
+		builder.append(tipoAcceso);
+		builder.append("]");
+		return builder.toString();
 	}
 }

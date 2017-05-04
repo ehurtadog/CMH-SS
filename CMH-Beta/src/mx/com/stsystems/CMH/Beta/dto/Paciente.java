@@ -1,6 +1,7 @@
 package mx.com.stsystems.CMH.Beta.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
@@ -21,9 +22,14 @@ public class Paciente implements Serializable {
 	private Date fechaNacimiento;
 	private float peso;
 	private float altura;
+	private String donadorSangre;
 	private String correoElectronico;
 	private String idEstadoCivil;
 	private String idTipoSangre;
+	private String tipoSangre;
+	private Timestamp fechaHoraRegistro;
+	private Timestamp fechaHoraModificacion;
+	private Timestamp fechaHoraBaja;
 	
 	public Paciente() {
 		
@@ -35,12 +41,13 @@ public class Paciente implements Serializable {
 		this.idPaciente = Global.getUUID();
 		this.idFiliacion = 0;
 		this.nombres = mensaje.getNombresCliente();
-		this.apellidoPaterno = mensaje.getApellidosCliente().split("[ ]+")[0];
-		this.apellidoMaterno = mensaje.getApellidosCliente().split("[ ]+")[1];
+		this.apellidoPaterno = mensaje.getApellidoPat();
+		this.apellidoMaterno = mensaje.getApellidoMat();
 		this.sexo = mensaje.getGenero();
 		this.fechaNacimiento = mensaje.getFechaNacimiento();
 		this.peso = mensaje.getPeso();
 		this.altura = mensaje.getAltura();
+		this.donadorSangre = mensaje.getDonadorSangre();
 		this.correoElectronico = mensaje.getCorreo();
 		
 		try {
@@ -49,7 +56,11 @@ public class Paciente implements Serializable {
 			this.idEstadoCivil = "7BAE03972A48DD59870C3FDA44B265FF";
 		}
 		
-		this.idTipoSangre = "D6DCB896498918D2F006564303FE0C14";
+		try {
+			this.idTipoSangre = serviceController.solicitaTipoSangrePorDescripcion(mensaje.getTipoSangre()).getIdTipoSangre();
+		} catch (SumarSaludException sse) {
+			this.idTipoSangre = "D6DCB896498918D2F006564303FE0C14";
+		}
 	}
 
 	public String getIdPaciente() {
@@ -124,6 +135,14 @@ public class Paciente implements Serializable {
 		this.altura = altura;
 	}
 
+	public String getDonadorSangre() {
+		return donadorSangre;
+	}
+
+	public void setDonadorSangre(String donadorSangre) {
+		this.donadorSangre = donadorSangre;
+	}
+
 	public String getCorreoElectronico() {
 		return correoElectronico;
 	}
@@ -148,6 +167,38 @@ public class Paciente implements Serializable {
 		this.idTipoSangre = idTipoSangre;
 	}
 
+	public String getTipoSangre() {
+		return tipoSangre;
+	}
+
+	public void setTipoSangre(String tipoSangre) {
+		this.tipoSangre = tipoSangre;
+	}
+
+	public Timestamp getFechaHoraRegistro() {
+		return fechaHoraRegistro;
+	}
+
+	public void setFechaHoraRegistro(Timestamp fechaHoraRegistro) {
+		this.fechaHoraRegistro = fechaHoraRegistro;
+	}
+
+	public Timestamp getFechaHoraModificacion() {
+		return fechaHoraModificacion;
+	}
+
+	public void setFechaHoraModificacion(Timestamp fechaHoraModificacion) {
+		this.fechaHoraModificacion = fechaHoraModificacion;
+	}
+
+	public Timestamp getFechaHoraBaja() {
+		return fechaHoraBaja;
+	}
+
+	public void setFechaHoraBaja(Timestamp fechaHoraBaja) {
+		this.fechaHoraBaja = fechaHoraBaja;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -169,12 +220,16 @@ public class Paciente implements Serializable {
 		builder.append(peso);
 		builder.append(", altura=");
 		builder.append(altura);
+		builder.append(", donadorSangre=");
+		builder.append(donadorSangre);
 		builder.append(", correoElectronico=");
 		builder.append(correoElectronico);
 		builder.append(", idEstadoCivil=");
 		builder.append(idEstadoCivil);
 		builder.append(", idTipoSangre=");
 		builder.append(idTipoSangre);
+		builder.append(", tipoSangre=");
+		builder.append(tipoSangre);
 		builder.append("]");
 		return builder.toString();
 	}

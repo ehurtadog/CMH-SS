@@ -10,11 +10,13 @@ import mx.com.stsystems.CMH.Beta.dao.CodigoPostalDAO;
 import mx.com.stsystems.CMH.Beta.dao.EstadoCivilDAO;
 import mx.com.stsystems.CMH.Beta.dao.HospitalDAO;
 import mx.com.stsystems.CMH.Beta.dao.PacienteDAO;
+import mx.com.stsystems.CMH.Beta.dao.TipoSangreDAO;
 import mx.com.stsystems.CMH.Beta.dto.Antecedente;
 import mx.com.stsystems.CMH.Beta.dto.CodigoPostal;
 import mx.com.stsystems.CMH.Beta.dto.EstadoCivil;
 import mx.com.stsystems.CMH.Beta.dto.Hospital;
 import mx.com.stsystems.CMH.Beta.dto.Paciente;
+import mx.com.stsystems.CMH.Beta.dto.TipoSangre;
 import mx.com.stsystems.CMH.Beta.exceptions.SumarSaludException;
 import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.CMH.Beta.web.controller.service.ServiceController;
@@ -25,6 +27,7 @@ public class ServiceControllerImpl implements ServiceController {
 	private static PacienteDAO pacienteDAO;
 	private static AntecedenteDAO antecedenteDAO;
 	private static EstadoCivilDAO estadoCivilDAO;
+	private static TipoSangreDAO tipoSangreDAO;
 	
 	static {
 		@SuppressWarnings("resource")
@@ -34,9 +37,7 @@ public class ServiceControllerImpl implements ServiceController {
 		pacienteDAO = (PacienteDAO) context.getBean("pacienteDAO");
 		antecedenteDAO = (AntecedenteDAO) context.getBean("antecedenteDAO");
 		estadoCivilDAO = (EstadoCivilDAO) context.getBean("estadoCivilDAO");
-	}
-	
-	public ServiceControllerImpl() {
+		tipoSangreDAO = (TipoSangreDAO) context.getBean("tipoSangreDAO");
 	}
 	
 	@Override
@@ -72,5 +73,10 @@ public class ServiceControllerImpl implements ServiceController {
 	@Override 
 	public EstadoCivil solicitaEstadoCivilPorDescripcion(String descripcion) throws SumarSaludException {
 		return estadoCivilDAO.consultaEstadoCivilPorDescripcion(descripcion);
+	}
+	
+	@Override
+	public TipoSangre solicitaTipoSangrePorDescripcion(String descripcion) throws SumarSaludException {
+		return tipoSangreDAO.consultaTipoSangrePorDescripcion(descripcion);
 	}
 }
