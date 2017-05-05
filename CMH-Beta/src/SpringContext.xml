@@ -16,7 +16,7 @@
       <property name = "dataSource"  ref = "dataSource" />    
    </bean>
 
-	<bean id="serviceController" class="mx.com.stsystems.CMH.Beta.web.controller.service.impl.ServiceControllerImpl">
+	<bean id="serviceController" class="mx.com.stsystems.cmh.beta.web.controller.service.impl.ServiceControllerImpl">
 	</bean>
 
 	<!-- jdbcTemplate uses dataSource -->
@@ -24,32 +24,32 @@
 	<!-- <property name="dataSource" ref="dataSource" /> -->
 	<!-- </bean> -->
 
-	<bean id="hospitalDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.HospitalDAOImpl">
+	<bean id="hospitalDAO" class="mx.com.stsystems.cmh.beta.dao.impl.HospitalDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
 
-	<bean id="codigoPostalDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.CodigoPostalDAOImpl">
+	<bean id="codigoPostalDAO" class="mx.com.stsystems.cmh.beta.dao.impl.CodigoPostalDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
 
-	<bean id="pacienteDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.PacienteDAOImpl">
+	<bean id="pacienteDAO" class="mx.com.stsystems.cmh.beta.dao.impl.PacienteDAOImpl">
 		<constructor-arg ref="dataSource" />
 		<constructor-arg ref="transactionManager" />
 	</bean>
 
-	<bean id="antecedenteDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.AntecedenteDAOImpl">
+	<bean id="antecedenteDAO" class="mx.com.stsystems.cmh.beta.dao.impl.AntecedenteDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
 
-	<bean id="estadoCivilDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.EstadoCivilDAOImpl">
+	<bean id="estadoCivilDAO" class="mx.com.stsystems.cmh.beta.dao.impl.EstadoCivilDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
 	
-	<bean id="tipoSangreDAO" class="mx.com.stsystems.CMH.Beta.dao.impl.TipoSangreDAOImpl">
+	<bean id="tipoSangreDAO" class="mx.com.stsystems.cmh.beta.dao.impl.TipoSangreDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
 
 	<!-- scans packages to find and register beans within the application context -->
 	<context:component-scan
-		base-package="mx.com.stsystems.CMH.Beta.web.controller.service.impl" />
+		base-package="mx.com.stsystems.cmh.beta.web.controller.service.impl" />
 </beans>
