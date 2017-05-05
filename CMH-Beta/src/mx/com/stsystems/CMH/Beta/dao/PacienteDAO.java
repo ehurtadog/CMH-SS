@@ -8,4 +8,5 @@ public interface PacienteDAO {
 	public long registraPaciente(MensajeRegistroPaciente registroPaciente) throws SumarSaludException;
 	public boolean buscaPacientePorCorreoElectronico(String correoElectronico);
 	public Paciente consultaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException;
+	public Paciente consultaPacientePorCorreoElectronico(String correoElectronico) throws SumarSaludException;
 }

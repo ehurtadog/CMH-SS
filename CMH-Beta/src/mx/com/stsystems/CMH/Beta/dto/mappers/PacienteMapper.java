@@ -21,9 +21,14 @@ public class PacienteMapper implements RowMapper<Paciente> {
 		paciente.setFechaNacimiento(rsPaciente.getDate("FECHANACIMIENTO"));
 		paciente.setPeso(rsPaciente.getFloat("PESO"));
 		paciente.setAltura(rsPaciente.getFloat("ALTURA"));
+		paciente.setDonadorSangre(rsPaciente.getString("DONADORSANGRE"));
 		paciente.setCorreoElectronico(rsPaciente.getString("CORREOELECTRONICO"));
 		paciente.setIdEstadoCivil(rsPaciente.getString("IDESTADOCIVIL"));
 		paciente.setIdTipoSangre(rsPaciente.getString("IDTIPOSANGRE"));
+		paciente.setTipoSangre(rsPaciente.getString("TIPOSANGRE"));
+		paciente.setFechaHoraRegistro(rsPaciente.getTimestamp("FECHAHORAREGISTRO"));
+		paciente.setFechaHoraModificacion(rsPaciente.getTimestamp("FECHAHORAMODIFICACION"));
+		paciente.setFechaHoraBaja(rsPaciente.getTimestamp("FECHAHORABAJA"));
 
 		return paciente;
 	}

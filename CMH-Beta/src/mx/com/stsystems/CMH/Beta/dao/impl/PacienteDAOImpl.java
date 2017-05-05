@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +25,7 @@ import mx.com.stsystems.CMH.Beta.json.messages.request.MensajeRegistroPaciente;
 public class PacienteDAOImpl implements PacienteDAO {
 	private JdbcTemplate jdbcTemplate;
 	private PlatformTransactionManager transactionManager;
+	private final static Logger logger = LoggerFactory.getLogger(PacienteDAOImpl.class);
 
     @Autowired
     public PacienteDAOImpl(DataSource dataSource, PlatformTransactionManager transactionManager) {
@@ -40,8 +43,9 @@ public class PacienteDAOImpl implements PacienteDAO {
 		StringBuilder QRY_REGISTRA_PACIENTE = new StringBuilder()
 			.append("INSERT INTO paciente (")
 			.append("   IDPACIENTE, IDFILIACION, NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO, SEXO, ")
-			.append("   FECHANACIMIENTO, PESO, ALTURA, CORREOELECTRONICO, IDESTADOCIVIL, IDTIPOSANGRE) ")
-			.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+			.append("   FECHANACIMIENTO, PESO, ALTURA, DONADORSANGRE, CORREOELECTRONICO, IDESTADOCIVIL, ")
+			.append("   IDTIPOSANGRE, FECHAHORAREGISTRO, FECHAHORAMODIFICACION, FECHAHORABAJA) ")
+			.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE(), SYSDATE(), NULL) ");
 		StringBuilder QRY_REGISTRA_ANTECEDENTE = new StringBuilder()
 				.append("INSERT INTO antecedente (")
 				.append("	IDPACIENTE, HIPERTENSION, DIABETES, HIPERTIROIDISMO, TABAQUISMO, TABAQUISMOFREQ, " )
@@ -70,7 +74,8 @@ public class PacienteDAOImpl implements PacienteDAO {
 			jdbcTemplate.update(QRY_REGISTRA_PACIENTE.toString(), new Object[] { paciente.getIdPaciente(),
 				paciente.getIdFiliacion(), paciente.getNombres(), paciente.getApellidoPaterno(), paciente.getApellidoMaterno(),
 				paciente.getSexo(), paciente.getFechaNacimiento(), paciente.getPeso(), paciente.getAltura(),
-				paciente.getCorreoElectronico(), paciente.getIdEstadoCivil(), paciente.getIdTipoSangre() });
+				paciente.getDonadorSangre(), paciente.getCorreoElectronico(), paciente.getIdEstadoCivil(), 
+				paciente.getIdTipoSangre() });
 			
 			jdbcTemplate.update(QRY_REGISTRA_ANTECEDENTE.toString(), new Object[] { antecedente.getIdPaciente(),
 				antecedente.getHipertension(), antecedente.getDiabetes(), antecedente.getHipertiroidismo(),
@@ -81,8 +86,9 @@ public class PacienteDAOImpl implements PacienteDAO {
 			
 			transactionManager.commit(status);
 		} catch (DataAccessException dae) {
-			String mensajeDeError = "Ocurrió un error al registrar al paciente: " + dae.getMessage();
-			System.err.println(mensajeDeError);
+			String mensajeDeError = "OcurriÃ³ un error al registrar al paciente: " + dae.getMessage();
+//			System.err.println(mensajeDeError);
+			logger.error(mensajeDeError, dae);
 			transactionManager.rollback(status);
 			throw new SumarSaludException(mensajeDeError);
 		}
@@ -106,7 +112,7 @@ public class PacienteDAOImpl implements PacienteDAO {
 				resultado = false;
 			}
 		} catch (DataAccessException dae) {
-			System.err.println("Ocurrio un error al consultar el paciente por correo electrónico: " + dae);
+			System.err.println("OcurriÃ³ un error al consultar el paciente por correo electrÃ³nico: " + dae);
 		}
 		
 		return resultado;
@@ -117,16 +123,45 @@ public class PacienteDAOImpl implements PacienteDAO {
 		Paciente paciente = null;
 		StringBuilder QRY_CONSULTA_PACIENTE_POR_IDFILIACION = new StringBuilder()
 			.append("SELECT ")
-			.append("   IDPACIENTE, IDFILIACION, NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO, SEXO, ")
-			.append("   FECHANACIMIENTO, PESO, ALTURA, CORREOELECTRONICO, IDESTADOCIVIL, IDTIPOSANGRE ")
-			.append(" FROM paciente ")
+			.append("   p.IDPACIENTE AS IDPACIENTE, p.IDFILIACION AS IDFILIACION, p.NOMBRES AS NOMBRES, ")
+			.append("   p.APELLIDOPATERNO AS APELLIDOPATERNO, p.APELLIDOMATERNO AS APELLIDOMATERNO, ")
+			.append("   p.SEXO AS SEXO, p.FECHANACIMIENTO AS FECHANACIMIENTO, p.PESO AS PESO, p.ALTURA AS ALTURA, ")
+			.append("   p.DONADORSANGRE AS DONADORSANGRE, p.CORREOELECTRONICO AS CORREOELECTRONICO, ")
+			.append("   p.IDESTADOCIVIL AS IDESTADOCIVIL, p.IDTIPOSANGRE AS IDTIPOSANGRE, ts.DESCRIPCION AS TIPOSANGRE, ")
+			.append("   p.FECHAHORAREGISTRO AS FECHAHORAREGISTRO, p.FECHAHORAMODIFICACION AS FECHAHORAMODIFICACION, ")
+			.append("   p.FECHAHORABAJA AS FECHAHORABAJA ")
+			.append(" FROM paciente p ")
+			.append("  LEFT JOIN tiposangre ts ")
+			.append("   ON ts.IDTIPOSANGRE = p.IDTIPOSANGRE ")
 			.append(" WHERE IDFILIACION = ? ");
 		
 		try {
 			paciente = jdbcTemplate.queryForObject(QRY_CONSULTA_PACIENTE_POR_IDFILIACION.toString(), new Object[] { idFiliacion }, 
 				new PacienteMapper());
 		} catch (DataAccessException dae) {
-			String mensajeDeError = "Ocurrió un error al consulta un paciente por el id de filiación: " + dae;
+			String mensajeDeError = "Ocurrió un error al consultar un paciente por el id de filiación: " + dae;
+			System.err.println(mensajeDeError);
+			throw new SumarSaludException(mensajeDeError);
+		}
+		
+		return paciente;
+	}
+	
+	@Override
+	public Paciente consultaPacientePorCorreoElectronico(String correoElectronico) throws SumarSaludException {
+		Paciente paciente = null;
+		StringBuilder QRY_CONSULTA_PACIENTE_POR_CORREO_ELECTRONICO = new StringBuilder()
+			.append("SELECT ")
+			.append("   IDPACIENTE, IDFILIACION, NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO, SEXO, ")
+			.append("   FECHANACIMIENTO, PESO, ALTURA, CORREOELECTRONICO, IDESTADOCIVIL, IDTIPOSANGRE ")
+			.append(" FROM paciente ")
+			.append(" WHERE CORREOELECTRONICO = ? ");
+		
+		try {
+			paciente = jdbcTemplate.queryForObject(QRY_CONSULTA_PACIENTE_POR_CORREO_ELECTRONICO.toString(), new Object[] { correoElectronico }, 
+				new PacienteMapper());
+		} catch (DataAccessException dae) {
+			String mensajeDeError = "Ocurrió un error al consultar un paciente por el correo electrónico: " + dae;
 			System.err.println(mensajeDeError);
 			throw new SumarSaludException(mensajeDeError);
 		}
