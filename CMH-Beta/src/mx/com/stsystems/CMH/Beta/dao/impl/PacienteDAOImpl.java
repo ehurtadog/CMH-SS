@@ -139,6 +139,7 @@ public class PacienteDAOImpl implements PacienteDAO {
 			paciente = jdbcTemplate.queryForObject(QRY_CONSULTA_PACIENTE_POR_IDFILIACION.toString(), new Object[] { idFiliacion }, 
 				new PacienteMapper());
 		} catch (DataAccessException dae) {
+<<<<<<< HEAD
 			String mensajeDeError = "Ocurrió un error al consultar un paciente por el id de filiación: " + dae;
 			System.err.println(mensajeDeError);
 			throw new SumarSaludException(mensajeDeError);
@@ -162,6 +163,9 @@ public class PacienteDAOImpl implements PacienteDAO {
 				new PacienteMapper());
 		} catch (DataAccessException dae) {
 			String mensajeDeError = "Ocurrió un error al consultar un paciente por el correo electrónico: " + dae;
+=======
+			String mensajeDeError = "OcurriÃ³ un error al consulta un paciente por el id de filiaciÃ³n: " + dae;
+>>>>>>> branch 'develop' of https://github.com/ehurtadog/CMH-SS.git
 			System.err.println(mensajeDeError);
 			throw new SumarSaludException(mensajeDeError);
 		}
