@@ -118,6 +118,28 @@ public class PacienteDAOImpl implements PacienteDAO {
 	}
 	
 	@Override
+	public boolean buscaPacientePorIdFiliacion(long idFiliacion) {
+		boolean resultado = true;
+		StringBuilder qryBuscaPacientePorIdFiliacion = new StringBuilder()
+			.append("SELECT COUNT(1) ")
+			.append(" FROM paciente ")
+			.append(" WHERE IDFILIACION = ? ");
+		
+		try {
+			int contador = jdbcTemplate.queryForObject(qryBuscaPacientePorIdFiliacion.toString(), 
+				new Object[] { idFiliacion }, Integer.class);
+			
+			if (contador == 0) {
+				resultado = false;
+			}
+		} catch (DataAccessException dae) {
+			LOGGER.error("Ocurrió un error al consultar el paciente por id de filiacion: ", dae);
+		}
+		
+		return resultado;
+	}
+	
+	@Override
 	public Paciente consultaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException {
 		Paciente paciente = null;
 		StringBuilder QRY_CONSULTA_PACIENTE_POR_IDFILIACION = new StringBuilder()

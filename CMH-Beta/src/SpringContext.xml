@@ -48,6 +48,10 @@
 	<bean id="tipoSangreDAO" class="mx.com.stsystems.cmh.beta.dao.impl.TipoSangreDAOImpl">
 		<constructor-arg ref="dataSource" />
 	</bean>
+	
+	<bean id="polizaDAO" class="mx.com.stsystems.cmh.beta.dao.impl.PolizaDAOImpl">
+		<constructor-arg ref="dataSource" />
+	</bean>
 
 	<!-- scans packages to find and register beans within the application context -->
 	<context:component-scan

@@ -14,9 +14,9 @@ public class Antecedente implements Serializable {
 	private String tabaquismo;
 	private int tabaquismoFrecuencia;
 	private String alcoholismo;
-	private int alcoholismoFrecuencia;
+	private String alcoholismoFrecuencia;
 	private String ejercicio;
-	private int ejercicioFrecuencia;
+	private String ejercicioFrecuencia;
 	private String hipertensionFamiliar;
 	private String diabetesFamiliar;
 	private String hipertiroidismoFamiliar;
@@ -100,11 +100,11 @@ public class Antecedente implements Serializable {
 		this.alcoholismo = alcoholismo;
 	}
 
-	public int getAlcoholismoFrecuencia() {
+	public String getAlcoholismoFrecuencia() {
 		return alcoholismoFrecuencia;
 	}
 
-	public void setAlcoholismoFrecuencia(int alcoholismoFrecuencia) {
+	public void setAlcoholismoFrecuencia(String alcoholismoFrecuencia) {
 		this.alcoholismoFrecuencia = alcoholismoFrecuencia;
 	}
 
@@ -116,11 +116,11 @@ public class Antecedente implements Serializable {
 		this.ejercicio = ejercicio;
 	}
 
-	public int getEjercicioFrecuencia() {
+	public String getEjercicioFrecuencia() {
 		return ejercicioFrecuencia;
 	}
 
-	public void setEjercicioFrecuencia(int ejercicioFrecuencia) {
+	public void setEjercicioFrecuencia(String ejercicioFrecuencia) {
 		this.ejercicioFrecuencia = ejercicioFrecuencia;
 	}
 
@@ -167,7 +167,7 @@ public class Antecedente implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Antecedentes [idPaciente=");
+		builder.append("Antecedente [idPaciente=");
 		builder.append(idPaciente);
 		builder.append(", hipertension=");
 		builder.append(hipertension);

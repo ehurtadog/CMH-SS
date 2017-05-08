@@ -10,6 +10,7 @@ import mx.com.stsystems.cmh.beta.dto.Paciente;
 import mx.com.stsystems.cmh.beta.dto.TipoSangre;
 import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
+import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 
 public interface ServiceController {
 	public List<Hospital> solicitaHopitalesPorEstado(String estado);
@@ -18,10 +19,14 @@ public interface ServiceController {
 	
 	public long registraPaciente(MensajeRegistroPaciente registroPaciente) throws SumarSaludException;
 	public boolean existePacientePorCorreoElectronico(String correoElectronico);
+	public boolean existePacientePorIdFiliacion(long idFiliacion);
 	public Paciente solicitaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException;
 	public Paciente solicitaPacientePorCorreoElectronico(String correoElectronico) throws SumarSaludException;
 	
 	public Antecedente solicitaAntecedentePorIdPaciente(String idPaciente) throws SumarSaludException;
+	
+	public boolean existePolizaPorIdFiliacion(long idFiliacion);
+	public MensajePolizaMembresia solicitaPolizaPorIdFiliacion(long idFiliacion) throws SumarSaludException;
 	
 	public EstadoCivil solicitaEstadoCivilPorDescripcion(String descripcion) throws SumarSaludException;
 	public TipoSangre solicitaTipoSangrePorDescripcion(String descripcion) throws SumarSaludException;

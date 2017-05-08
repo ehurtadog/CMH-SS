@@ -10,6 +10,7 @@ import mx.com.stsystems.cmh.beta.dao.CodigoPostalDAO;
 import mx.com.stsystems.cmh.beta.dao.EstadoCivilDAO;
 import mx.com.stsystems.cmh.beta.dao.HospitalDAO;
 import mx.com.stsystems.cmh.beta.dao.PacienteDAO;
+import mx.com.stsystems.cmh.beta.dao.PolizaDAO;
 import mx.com.stsystems.cmh.beta.dao.TipoSangreDAO;
 import mx.com.stsystems.cmh.beta.dto.Antecedente;
 import mx.com.stsystems.cmh.beta.dto.CodigoPostal;
@@ -19,6 +20,7 @@ import mx.com.stsystems.cmh.beta.dto.Paciente;
 import mx.com.stsystems.cmh.beta.dto.TipoSangre;
 import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
+import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 import mx.com.stsystems.cmh.beta.web.controller.service.ServiceController;
 
 public class ServiceControllerImpl implements ServiceController {
@@ -28,6 +30,7 @@ public class ServiceControllerImpl implements ServiceController {
 	private static AntecedenteDAO antecedenteDAO;
 	private static EstadoCivilDAO estadoCivilDAO;
 	private static TipoSangreDAO tipoSangreDAO;
+	private static PolizaDAO polizaDAO;
 	
 	static {
 		@SuppressWarnings("resource")
@@ -38,6 +41,7 @@ public class ServiceControllerImpl implements ServiceController {
 		antecedenteDAO = (AntecedenteDAO) context.getBean("antecedenteDAO");
 		estadoCivilDAO = (EstadoCivilDAO) context.getBean("estadoCivilDAO");
 		tipoSangreDAO = (TipoSangreDAO) context.getBean("tipoSangreDAO");
+		polizaDAO = (PolizaDAO) context.getBean("polizaDAO");
 	}
 	
 	@Override
@@ -61,6 +65,11 @@ public class ServiceControllerImpl implements ServiceController {
 	}
 	
 	@Override
+	public boolean existePacientePorIdFiliacion(long idFiliacion) {
+		return pacienteDAO.buscaPacientePorIdFiliacion(idFiliacion);
+	}
+	
+	@Override
 	public Paciente solicitaPacientePorIdFiliacion(long idFiliacion) throws SumarSaludException {
 		return pacienteDAO.consultaPacientePorIdFiliacion(idFiliacion);
 	}
@@ -73,6 +82,16 @@ public class ServiceControllerImpl implements ServiceController {
 	@Override
 	public Antecedente solicitaAntecedentePorIdPaciente(String idPaciente) throws SumarSaludException {
 		return antecedenteDAO.consultaAntecedentePorIdPaciente(idPaciente);
+	}
+	
+	@Override
+	public boolean existePolizaPorIdFiliacion(long idFiliacion) {
+		return polizaDAO.buscaPolizaPorIdFiliacion(idFiliacion);
+	}
+	
+	@Override
+	public MensajePolizaMembresia solicitaPolizaPorIdFiliacion(long idFiliacion) throws SumarSaludException {
+		return polizaDAO.consultaPolizaPorIdFiliacion(idFiliacion);
 	}
 	
 	@Override 

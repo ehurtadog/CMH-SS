@@ -19,9 +19,9 @@ public class AntecedenteMapper implements RowMapper<Antecedente> {
 		antecedente.setTabaquismo(rsAntecedente.getString("TABAQUISMO"));
 		antecedente.setTabaquismoFrecuencia(rsAntecedente.getInt("TABAQUISMOFREQ"));
 		antecedente.setAlcoholismo(rsAntecedente.getString("ALCOHOLISMO"));
-		antecedente.setAlcoholismoFrecuencia(rsAntecedente.getInt("ALCOHOLISMOFREQ"));
+		antecedente.setAlcoholismoFrecuencia(rsAntecedente.getString("ALCOHOLISMOFREQ"));
 		antecedente.setEjercicio(rsAntecedente.getString("EJERCICIO"));
-		antecedente.setEjercicioFrecuencia(rsAntecedente.getInt("EJERCICIOFREQ"));
+		antecedente.setEjercicioFrecuencia(rsAntecedente.getString("EJERCICIOFREQ"));
 		antecedente.setHipertensionFamiliar(rsAntecedente.getString("HIPERTENSIONFAM"));
 		antecedente.setHipertiroidismoFamiliar(rsAntecedente.getString("HIPERTIROIDISMOFAM"));
 		antecedente.setDiabetesFamiliar(rsAntecedente.getString("DIABETESFAM"));

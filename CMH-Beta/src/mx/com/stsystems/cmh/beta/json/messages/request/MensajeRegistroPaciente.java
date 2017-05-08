@@ -31,9 +31,9 @@ public class MensajeRegistroPaciente implements Serializable {
 	private String fumas;
 	private int frecuenciaFuma;
 	private String tomAlcohol;
-	private int frecuenciaTomAlcohol;
+	private String frecuenciaTomAlcohol;
 	private String ejercicio;
-	private int frecuenciaEjercicio;
+	private String frecuenciaEjercicio;
 	private String hipertensionFam;
 	private String diabetesFam;
 	private String hipertiroidismoFam;
@@ -236,11 +236,11 @@ public class MensajeRegistroPaciente implements Serializable {
 		this.tomAlcohol = tomAlcohol;
 	}
 
-	public int getFrecuenciaTomAlcohol() {
+	public String getFrecuenciaTomAlcohol() {
 		return this.frecuenciaTomAlcohol;
 	}
 
-	public void setFrecuenciaTomAlcohol(int frecuenciaTomAlcohol) {
+	public void setFrecuenciaTomAlcohol(String frecuenciaTomAlcohol) {
 		this.frecuenciaTomAlcohol = frecuenciaTomAlcohol;
 	}
 
@@ -252,11 +252,11 @@ public class MensajeRegistroPaciente implements Serializable {
 		this.ejercicio = ejercicio;
 	}
 
-	public int getFrecuenciaEjercicio() {
+	public String getFrecuenciaEjercicio() {
 		return this.frecuenciaEjercicio;
 	}
 
-	public void setFrecuenciaEjercicio(int frecuenciaEjercicio) {
+	public void setFrecuenciaEjercicio(String frecuenciaEjercicio) {
 		this.frecuenciaEjercicio = frecuenciaEjercicio;
 	}
 
