@@ -13,7 +13,7 @@ import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 
 public interface ServiceController {
-	public List<Hospital> solicitaHopitalesPorEstado(String estado);
+	public List<Hospital> solicitaHopitalesPorEstado(String estado) throws SumarSaludException;
 	
 	public List<CodigoPostal> solicitaAsentamientosPorCodigoPostal(String codigoPostal);
 	

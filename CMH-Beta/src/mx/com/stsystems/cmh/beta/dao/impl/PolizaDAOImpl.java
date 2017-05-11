@@ -73,7 +73,7 @@ public class PolizaDAOImpl implements PolizaDAO {
 			mensajePolizaMemebresia.setBeneficios(consultaBeneficiosPorIdFiliacion(idFiliacion));
 		} catch (DataAccessException | SumarSaludException e) {
 			LOGGER.error("Error en la consulta de la poliza: " + e.getMessage());
-			throw new SumarSaludException(null);
+			throw new SumarSaludException("");
 		} 
 		
 		return mensajePolizaMemebresia;

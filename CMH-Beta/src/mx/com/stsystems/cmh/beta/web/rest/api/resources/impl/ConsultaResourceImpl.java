@@ -33,6 +33,7 @@ import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeCodigPostal;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeEstado;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
+import mx.com.stsystems.cmh.beta.json.messages.response.MensajeHospitalResponse;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 import mx.com.stsystems.cmh.beta.util.Constantes;
 import mx.com.stsystems.cmh.beta.web.controller.service.ServiceController;
@@ -42,6 +43,7 @@ import mx.com.stsystems.cmh.beta.web.controller.service.impl.ServiceControllerIm
 public class ConsultaResourceImpl implements Constantes {
 	private final static Logger LOGGER = LoggerFactory.getLogger(ConsultaResourceImpl.class);
 
+	@SuppressWarnings("incomplete-switch")
 	@POST
 	@Path("/HospitalesPorEstado")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -50,6 +52,7 @@ public class ConsultaResourceImpl implements Constantes {
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = null;
 		ServiceController serviceController = new ServiceControllerImpl();
+		MensajeHospitalResponse mensajeHospitalResponse = new MensajeHospitalResponse();
 		
 		try {
 			LOGGER.debug("VAR: mensaje: " + estado);
@@ -57,13 +60,29 @@ public class ConsultaResourceImpl implements Constantes {
 			MensajeEstado mensajeEstado = mapper.readValue(estado, MensajeEstado.class);
 			LOGGER.debug("VAR: mensajeEstado: " + mensajeEstado);
 			
-			List<Hospital> hospitales = serviceController.solicitaHopitalesPorEstado(mensajeEstado.getEstado());
+			try {
+				List<Hospital> hospitales = serviceController.solicitaHopitalesPorEstado(mensajeEstado.getEstado());
+				mensajeHospitalResponse.setHospitales(hospitales);
+				mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.OK.getCodigo());
+				mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.OK.getMensaje());
+			} catch (SumarSaludException sse) {
+				switch (sse.getEstatusConsultaHospital()) {
+					case NO_EXISTEN_ELEMENTOS:
+						mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getCodigo());
+						mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getMensaje());
+						break;
+					case ERROR_EN_CONSULTA_HOSPITAL:
+						mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL.getCodigo());
+						mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL.getMensaje());
+						break;
+				}
+			}
 			
-			jsonInString = mapper.writeValueAsString(hospitales);
-			LOGGER.debug("VAR: hospitales: " + jsonInString);
+			jsonInString = mapper.writeValueAsString(mensajeHospitalResponse);
+			LOGGER.debug("VAR: jsonInString: " + jsonInString);
 		} catch (IOException e) {
 			LOGGER.error("Error de conversion de JSON");
-		}
+		} 
 		
 		return jsonInString;
 	}
@@ -227,7 +246,7 @@ public class ConsultaResourceImpl implements Constantes {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String postFotoPorIdFiliacion(@PathParam("idFiliacion") long idFiliacion, @Context ServletContext sc) {
 		try {
-			ClassLoader classLoader = getClass().getClassLoader();
+//			ClassLoader classLoader = getClass().getClassLoader();
 			System.out.println("ResourcePaths: " + sc.getResourcePaths("/resources/images"));
 			URL resource = sc.getResource("/resources/images/1705000001.png");
 			System.out.println("resource.getPath(): " + resource.getPath());

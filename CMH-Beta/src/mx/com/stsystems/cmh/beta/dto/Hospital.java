@@ -2,16 +2,25 @@ package mx.com.stsystems.cmh.beta.dto;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class Hospital implements Serializable {
 	private static final long serialVersionUID = 5034578151108791483L;
 	
+	@JsonIgnore
 	private String idHospital;
 	private String descripcion;
 	private String url;
-	private int idAsentamiento;
-	private int idMunicipio;
-	private int idEstado;
+	@JsonIgnore
 	private int idCiudad;
+	@JsonIgnore
+	private int idMunicipio;
+	@JsonIgnore
+	private int idEstado;
+	@JsonIgnore
+	private float latitud;
+	@JsonIgnore
+	private float longitud;
 
 	public String getIdHospital() {
 		return idHospital;
@@ -37,12 +46,12 @@ public class Hospital implements Serializable {
 		this.url = url;
 	}
 
-	public int getIdAsentamiento() {
-		return idAsentamiento;
+	public int getIdCiudad() {
+		return idCiudad;
 	}
 
-	public void setIdAsentamiento(int idAsentamiento) {
-		this.idAsentamiento = idAsentamiento;
+	public void setIdCiudad(int idCiudad) {
+		this.idCiudad = idCiudad;
 	}
 
 	public int getIdMunicipio() {
@@ -61,18 +70,43 @@ public class Hospital implements Serializable {
 		this.idEstado = idEstado;
 	}
 
-	public int getIdCiudad() {
-		return idCiudad;
+	public float getLatitud() {
+		return latitud;
 	}
 
-	public void setIdCiudad(int idCiudad) {
-		this.idCiudad = idCiudad;
+	public void setLatitud(float latitud) {
+		this.latitud = latitud;
+	}
+
+	public float getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(float longitud) {
+		this.longitud = longitud;
 	}
 
 	@Override
 	public String toString() {
-		return "Hospital [idHospital=" + idHospital + ", descripcion=" + descripcion + ", url=" + url
-				+ ", idAsentamiento=" + idAsentamiento + ", idMunicipio=" + idMunicipio + ", idEstado=" + idEstado
-				+ ", idCiudad=" + idCiudad + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Hospital [idHospital=");
+		builder.append(idHospital);
+		builder.append(", descripcion=");
+		builder.append(descripcion);
+		builder.append(", url=");
+		builder.append(url);
+		builder.append(", idCiudad=");
+		builder.append(idCiudad);
+		builder.append(", idMunicipio=");
+		builder.append(idMunicipio);
+		builder.append(", idEstado=");
+		builder.append(idEstado);
+		builder.append(", latitud=");
+		builder.append(latitud);
+		builder.append(", longitud=");
+		builder.append(longitud);
+		builder.append("]");
+		return builder.toString();
 	}
+
 }
