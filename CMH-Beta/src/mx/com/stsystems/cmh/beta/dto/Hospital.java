@@ -17,9 +17,7 @@ public class Hospital implements Serializable {
 	private int idMunicipio;
 	@JsonIgnore
 	private int idEstado;
-	@JsonIgnore
 	private double latitud;
-	@JsonIgnore
 	private double longitud;
 
 	public String getIdHospital() {
