@@ -18,9 +18,9 @@ public class Hospital implements Serializable {
 	@JsonIgnore
 	private int idEstado;
 	@JsonIgnore
-	private float latitud;
+	private double latitud;
 	@JsonIgnore
-	private float longitud;
+	private double longitud;
 
 	public String getIdHospital() {
 		return idHospital;
@@ -70,19 +70,19 @@ public class Hospital implements Serializable {
 		this.idEstado = idEstado;
 	}
 
-	public float getLatitud() {
+	public double getLatitud() {
 		return latitud;
 	}
 
-	public void setLatitud(float latitud) {
+	public void setLatitud(double latitud) {
 		this.latitud = latitud;
 	}
 
-	public float getLongitud() {
+	public double getLongitud() {
 		return longitud;
 	}
 
-	public void setLongitud(float longitud) {
+	public void setLongitud(double longitud) {
 		this.longitud = longitud;
 	}
 

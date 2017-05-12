@@ -27,7 +27,7 @@ public class HospitalDAOImpl implements HospitalDAO, Constantes {
     
 	@Override
 	public List<Hospital> consultaHospitalesPorEstado(String estado) throws SumarSaludException {
-		StringBuilder QRY_CONSULTA_HOPITAL_POR_ESTADO = new StringBuilder()
+		final StringBuilder QRY_CONSULTA_HOSPITAL_POR_ESTADO = new StringBuilder()
 				.append("SELECT IDHOSPITAL, DESCRIPCION, URL, IDCIUDAD, IDMUNICIPIO, IDESTADO, LATITUD, LONGITUD ")
 				.append(" FROM hospital ")
 				.append(" WHERE IDESTADO = ( ")
@@ -37,7 +37,7 @@ public class HospitalDAOImpl implements HospitalDAO, Constantes {
 		List<Hospital> hospitales = null;
 			
 		try {
-			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOPITAL_POR_ESTADO.toString(),	new Object[] { estado }, new HospitalMapper());
+			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOSPITAL_POR_ESTADO.toString(),	new Object[] { estado }, new HospitalMapper());
 			
 			if ((hospitales == null) || (hospitales.isEmpty())) {
 				LOGGER.debug(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getMensaje());
@@ -50,5 +50,51 @@ public class HospitalDAOImpl implements HospitalDAO, Constantes {
 			
 		return hospitales;
 	}
-
+	
+	@Override
+	public List<Hospital> consultaHospitalesPorCiudad(String ciudad) throws SumarSaludException {
+		final StringBuilder QRY_CONSULTA_HOSPITAL_POR_CIUDAD = new StringBuilder()
+				.append("SELECT IDHOSPITAL, DESCRIPCION, URL, IDCIUDAD, IDMUNICIPIO, IDESTADO, LATITUD, LONGITUD ")
+				.append(" FROM hospital ")
+				.append(" WHERE CIUDAD = ? ");
+		List<Hospital> hospitales = null;
+			
+		try {
+			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOSPITAL_POR_CIUDAD.toString(),	new Object[] { ciudad }, new HospitalMapper());
+			
+			if ((hospitales == null) || (hospitales.isEmpty())) {
+				LOGGER.debug(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getMensaje());
+				throw new SumarSaludException(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS);
+			}
+		} catch (DataAccessException dae) {
+			LOGGER.warn("[BUG] - Error en la consulta de hospitales por ciudad", dae);
+			throw new SumarSaludException(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL);
+		} 
+			
+		return hospitales;
+	}
+	
+	@Override
+	public List<Hospital> consultaHospitalesPorLatitudLongitud(double latitud, double longitud) throws SumarSaludException {
+		final StringBuilder QRY_CONSULTA_HOSPITAL_POR_LATITUD_LONGITUD = new StringBuilder()
+				.append("SELECT IDHOSPITAL, DESCRIPCION, URL, IDCIUDAD, IDMUNICIPIO, IDESTADO, LATITUD, LONGITUD ")
+				.append(" FROM hospital ")
+				.append(" WHERE LATITUD = ? AND ")
+				.append("       LONGITUD = ? ");
+		List<Hospital> hospitales = null;
+			
+		try {
+			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOSPITAL_POR_LATITUD_LONGITUD.toString(),	new Object[] { latitud, longitud }, new HospitalMapper());
+			
+			if ((hospitales == null) || (hospitales.isEmpty())) {
+				LOGGER.debug(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getMensaje());
+				throw new SumarSaludException(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS);
+			}
+		} catch (DataAccessException dae) {
+			LOGGER.warn("[BUG] - Error en la consulta de hospitales por latitud/longitud", dae);
+			throw new SumarSaludException(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL);
+		} 
+			
+		return hospitales;
+	}
 }

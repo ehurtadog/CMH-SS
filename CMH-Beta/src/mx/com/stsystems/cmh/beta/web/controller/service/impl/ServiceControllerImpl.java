@@ -45,8 +45,18 @@ public class ServiceControllerImpl implements ServiceController {
 	}
 	
 	@Override
-	public List<Hospital> solicitaHopitalesPorEstado(String estado) throws SumarSaludException {
+	public List<Hospital> solicitaHospitalesPorEstado(String estado) throws SumarSaludException {
 		return hospitalDAO.consultaHospitalesPorEstado(estado);
+	}
+	
+	@Override
+	public List<Hospital> solicitaHospitalesPorCiudad(String ciudad) throws SumarSaludException {
+		return hospitalDAO.consultaHospitalesPorCiudad(ciudad);
+	}
+	
+	@Override
+	public List<Hospital> solicitaHospitalesPorLatitudLongitud(double latitud, double longitud) throws SumarSaludException {
+		return hospitalDAO.consultaHospitalesPorLatitudLongitud(latitud, longitud);
 	}
 	
 	@Override

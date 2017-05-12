@@ -18,8 +18,8 @@ public class HospitalMapper implements RowMapper<Hospital> {
 		hospital.setIdCiudad(rsHospital.getInt("IDCIUDAD"));
 		hospital.setIdMunicipio(rsHospital.getInt("IDMUNICIPIO"));
 		hospital.setIdEstado(rsHospital.getInt("IDESTADO"));
-		hospital.setLatitud(rsHospital.getFloat("LATITUD"));
-		hospital.setLongitud(rsHospital.getFloat("LONGITUD"));
+		hospital.setLatitud(rsHospital.getDouble("LATITUD"));
+		hospital.setLongitud(rsHospital.getDouble("LONGITUD"));
 
 		return hospital;
 	}

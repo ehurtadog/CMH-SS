@@ -31,7 +31,7 @@ import mx.com.stsystems.cmh.beta.dto.Hospital;
 import mx.com.stsystems.cmh.beta.dto.Paciente;
 import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeCodigPostal;
-import mx.com.stsystems.cmh.beta.json.messages.request.MensajeEstado;
+import mx.com.stsystems.cmh.beta.json.messages.request.MensajeConsultaHospital;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajeHospitalResponse;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
@@ -45,23 +45,39 @@ public class ConsultaResourceImpl implements Constantes {
 
 	@SuppressWarnings("incomplete-switch")
 	@POST
-	@Path("/HospitalesPorEstado")
+	@Path("/Hospitales/{criterio}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String postHospitalesPorEstado(String estado) {
+	public String postHospitales(@PathParam("criterio") String criterio, String jsonRequest) {
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString = null;
+		String jsonResponse = null;
 		ServiceController serviceController = new ServiceControllerImpl();
 		MensajeHospitalResponse mensajeHospitalResponse = new MensajeHospitalResponse();
 		
 		try {
-			LOGGER.debug("VAR: mensaje: " + estado);
+			LOGGER.debug("[VAR] jsonRequest: " + jsonRequest);
 
-			MensajeEstado mensajeEstado = mapper.readValue(estado, MensajeEstado.class);
-			LOGGER.debug("VAR: mensajeEstado: " + mensajeEstado);
+			MensajeConsultaHospital mensajeConsultaHospital = mapper.readValue(jsonRequest, MensajeConsultaHospital.class);
+			LOGGER.debug("[VAR] mensajeConsultaHospital: " + mensajeConsultaHospital);
 			
 			try {
-				List<Hospital> hospitales = serviceController.solicitaHopitalesPorEstado(mensajeEstado.getEstado());
+				List<Hospital> hospitales;
+				switch (criterio) {
+					case CONSULTA_HOSPITAL_CRITERIO_ESTADO:
+						hospitales = serviceController.solicitaHospitalesPorEstado(mensajeConsultaHospital.getEstado());
+						break;
+					case CONSULTA_HOSPITAL_CRITERIO_CIUDAD:
+						hospitales = serviceController.solicitaHospitalesPorCiudad(mensajeConsultaHospital.getCiudad());
+						break;
+					case CONSULTA_HOSPITAL_CRITERIO_COORDENADAS:
+						hospitales = serviceController.solicitaHospitalesPorLatitudLongitud(mensajeConsultaHospital.getLatitud(), 
+							mensajeConsultaHospital.getLongitud());
+						break;
+					default:
+						LOGGER.warn(EstatusConsultaHospital.CRITERIO_CONSULTA_INVALIDO.getMensaje());
+						throw new SumarSaludException(EstatusConsultaHospital.CRITERIO_CONSULTA_INVALIDO);
+				}
+				
 				mensajeHospitalResponse.setHospitales(hospitales);
 				mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.OK.getCodigo());
 				mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.OK.getMensaje());
@@ -75,16 +91,21 @@ public class ConsultaResourceImpl implements Constantes {
 						mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL.getCodigo());
 						mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.ERROR_EN_CONSULTA_HOSPITAL.getMensaje());
 						break;
+					case CRITERIO_CONSULTA_INVALIDO:
+						mensajeHospitalResponse.setEstatus(EstatusConsultaHospital.CRITERIO_CONSULTA_INVALIDO.getCodigo());
+						mensajeHospitalResponse.setMensaje(EstatusConsultaHospital.CRITERIO_CONSULTA_INVALIDO.getMensaje());
+						break;
 				}
 			}
 			
-			jsonInString = mapper.writeValueAsString(mensajeHospitalResponse);
-			LOGGER.debug("VAR: jsonInString: " + jsonInString);
+			jsonResponse = mapper.writeValueAsString(mensajeHospitalResponse);
+			LOGGER.debug("VAR: jsonResponse: " + jsonResponse);
 		} catch (IOException e) {
-			LOGGER.error("Error de conversion de JSON");
+			LOGGER.error(EstatusConsultaHospital.ERROR_CONVERSION_JSON.getMensaje());
+			jsonResponse = CONSULTA_HOSPITAL_JSON_INVALIDO;
 		} 
 		
-		return jsonInString;
+		return jsonResponse;
 	}
 	
 	@POST
