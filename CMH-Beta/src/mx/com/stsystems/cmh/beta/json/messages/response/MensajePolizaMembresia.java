@@ -5,6 +5,7 @@ import java.util.List;
 
 import mx.com.stsystems.cmh.beta.dto.Beneficio;
 import mx.com.stsystems.cmh.beta.dto.Poliza;
+import mx.com.stsystems.cmh.beta.dto.Programa;
 
 public class MensajePolizaMembresia implements Serializable{
 	private static final long serialVersionUID = 8922879204582336457L;
@@ -12,14 +13,10 @@ public class MensajePolizaMembresia implements Serializable{
 	private long idFiliacion;
 	private Poliza poliza;
 	private List<Beneficio> beneficios;
+	private List<Programa> programas;
 	private int estatus;
 	private String mensaje;
 	
-	public MensajePolizaMembresia() {
-//		this.poliza = new Poliza();
-//		this.beneficios = new ArrayList<Beneficio>();
-	}
-
 	public long getIdFiliacion() {
 		return idFiliacion;
 	}
@@ -42,6 +39,14 @@ public class MensajePolizaMembresia implements Serializable{
 
 	public void setBeneficios(List<Beneficio> beneficios) {
 		this.beneficios = beneficios;
+	}
+
+	public List<Programa> getProgramas() {
+		return programas;
+	}
+
+	public void setProgramas(List<Programa> programas) {
+		this.programas = programas;
 	}
 
 	public int getEstatus() {
@@ -69,6 +74,8 @@ public class MensajePolizaMembresia implements Serializable{
 		builder.append(poliza);
 		builder.append(", beneficios=");
 		builder.append(beneficios);
+		builder.append(", programas=");
+		builder.append(programas);
 		builder.append(", estatus=");
 		builder.append(estatus);
 		builder.append(", mensaje=");

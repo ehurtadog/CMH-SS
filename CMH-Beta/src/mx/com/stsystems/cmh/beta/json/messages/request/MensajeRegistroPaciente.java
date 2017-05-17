@@ -40,6 +40,8 @@ public class MensajeRegistroPaciente implements Serializable {
 	private String cancerFam;
 	private String infartoFam;
 	private int tipoAcceso;
+	@JsonIgnore
+	private String foto;
 	
 	public MensajeRegistroPaciente() {
 	}
@@ -306,6 +308,14 @@ public class MensajeRegistroPaciente implements Serializable {
 
 	public void setTipoAcceso(int tipoAcceso) {
 		this.tipoAcceso = tipoAcceso;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
 	}
 
 	@Override

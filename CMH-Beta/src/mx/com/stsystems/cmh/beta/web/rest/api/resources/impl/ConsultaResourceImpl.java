@@ -3,11 +3,7 @@ package mx.com.stsystems.cmh.beta.web.rest.api.resources.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -34,6 +30,7 @@ import mx.com.stsystems.cmh.beta.json.messages.request.MensajeCodigPostal;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeConsultaHospital;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajeHospitalResponse;
+import mx.com.stsystems.cmh.beta.json.messages.response.MensajePhotoResponse;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 import mx.com.stsystems.cmh.beta.util.Constantes;
 import mx.com.stsystems.cmh.beta.web.controller.service.ServiceController;
@@ -263,18 +260,15 @@ public class ConsultaResourceImpl implements Constantes {
 	}
 	
 	@POST
-	@Path("/Foto/idFiliacion/{idFiliacion}")
+	@Path("/Foto/{idFiliacion}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String postFotoPorIdFiliacion(@PathParam("idFiliacion") long idFiliacion, @Context ServletContext sc) {
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonResponse = null;
+		MensajePhotoResponse mensajePhotoResponse = new MensajePhotoResponse();
+		
 		try {
-//			ClassLoader classLoader = getClass().getClassLoader();
-			System.out.println("ResourcePaths: " + sc.getResourcePaths("/resources/images"));
-			URL resource = sc.getResource("/resources/images/1705000001.png");
-			System.out.println("resource.getPath(): " + resource.getPath());
-			File file = Paths.get(resource.toURI()).toFile();
-//			File file = new File("/resources/images/1705000001.png");
-//			File file = new File(classLoader.getResource("/resources/images/1705000001.png").getFile());
-//			File file = new File(sc.getResource("/resources/images/1705000001.png").getFile());
+			File file = new File("/var/opt/appsumarsalud.com/resources/photos/" + idFiliacion + ".png");
 	
 			FileInputStream imageInFile = new FileInputStream(file);
 			byte imageData[] = new byte[(int) file.length()];
@@ -282,29 +276,32 @@ public class ConsultaResourceImpl implements Constantes {
 			
 			String imageDataString = encodeImage(imageData);
 			
-			System.out.println("Image Data String size: " + imageDataString.length());
-			System.out.println("Image Data String excerpt: " + imageDataString.substring(0, 500));
-			
-			byte[] imageByteArray = decodeImage(imageDataString);
-			
-			FileOutputStream imageOutFile = new FileOutputStream("d:\\1705000001-3.png");
-			
-			imageOutFile.write(imageByteArray);
+			LOGGER.debug("Tamaño de la foto: " + imageDataString.length());
 			
 			imageInFile.close();
-			imageOutFile.close();
 			
-			System.out.println("Image successfully Manipulated!");
+			mensajePhotoResponse.setFoto(imageDataString);
+			mensajePhotoResponse.setEstatus(EstatusConsultaFoto.OK.getCodigo());
+			mensajePhotoResponse.setMensaje(EstatusConsultaFoto.OK.getMensaje());
 		} catch (FileNotFoundException fnfe) {
-			System.err.println("Image not found: " + fnfe);
+			LOGGER.info(EstatusConsultaFoto.NO_EXISTE_LA_FOTO.getMensaje(), fnfe);
+			mensajePhotoResponse.setEstatus(EstatusConsultaFoto.NO_EXISTE_LA_FOTO.getCodigo());
+			mensajePhotoResponse.setMensaje(EstatusConsultaFoto.NO_EXISTE_LA_FOTO.getMensaje());
 		} catch (IOException ioe) {
-			System.err.println("Exception while reading the image: " + ioe);
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.info(EstatusConsultaFoto.ERROR_LEER_FOTO.getMensaje(), ioe);
+			mensajePhotoResponse.setEstatus(EstatusConsultaFoto.ERROR_LEER_FOTO.getCodigo());
+			mensajePhotoResponse.setMensaje(EstatusConsultaFoto.ERROR_LEER_FOTO.getMensaje());
+		} 
+
+		try {
+			jsonResponse = mapper.writeValueAsString(mensajePhotoResponse);
+		} catch (IOException ioe) {
+			LOGGER.warn(EstatusConsultaFoto.ERROR_CONVERSION_JSON.getMensaje(), ioe);
+			jsonResponse = CONSULTA_FOTO_JSON_INVALIDO;
 		}
+
 		
-		return null;
+		return jsonResponse;
 	}
 	
 	public static String encodeImage(byte[] imageByteArray) {

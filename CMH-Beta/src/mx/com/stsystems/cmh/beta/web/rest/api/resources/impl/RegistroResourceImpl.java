@@ -1,5 +1,7 @@
 package mx.com.stsystems.cmh.beta.web.rest.api.resources.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -9,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.codec.binary.Base64;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,10 +61,27 @@ public class RegistroResourceImpl {
 				
 				idFiliacion = serviceController.registraPaciente(mensajeRegistroPaciente);
 				
-				mensajeRegistroPacienteResponse.setEstatus(0);
-				mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
-				mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
-				mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+				try {
+					byte[] imageByteArray = decodeImage(mensajeRegistroPaciente.getFoto());
+					FileOutputStream imageOutFile;
+					imageOutFile = new FileOutputStream("/var/opt/appsumarsalud.com/resources/photos/" + idFiliacion + ".png");
+					imageOutFile.write(imageByteArray);
+					imageOutFile.close();
+					
+					mensajeRegistroPacienteResponse.setEstatus(0);
+					mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
+					mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
+					mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+				} catch (IOException ioe) {
+					LOGGER.warn("NO SE PUDO GUARDAR LA FOTO", ioe);
+					
+					mensajeRegistroPacienteResponse.setEstatus(2);
+					mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
+					mensajeRegistroPacienteResponse.setDescripcion("SE REGISTRO AL PACIENTE PERO SIN LA FOTO");
+					mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+				}
+				
+
 			} catch (SumarSaludException sse) {
 				mensajeRegistroPacienteResponse.setEstatus(1);
 				mensajeRegistroPacienteResponse.setIdFiliacion(0);
@@ -85,5 +105,9 @@ public class RegistroResourceImpl {
 		}
 		
 		return jsonInString;
+	}
+	
+	public static byte[] decodeImage(String imageDataString) {
+		return Base64.decodeBase64(imageDataString);
 	}
 }

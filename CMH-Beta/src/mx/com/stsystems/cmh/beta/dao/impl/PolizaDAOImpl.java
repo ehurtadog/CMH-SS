@@ -13,8 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import mx.com.stsystems.cmh.beta.dao.PolizaDAO;
 import mx.com.stsystems.cmh.beta.dto.Beneficio;
 import mx.com.stsystems.cmh.beta.dto.Poliza;
+import mx.com.stsystems.cmh.beta.dto.Programa;
 import mx.com.stsystems.cmh.beta.dto.mappers.BeneficioMapper;
 import mx.com.stsystems.cmh.beta.dto.mappers.PolizaMapper;
+import mx.com.stsystems.cmh.beta.dto.mappers.ProgramaMapper;
 import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
 
@@ -71,6 +73,7 @@ public class PolizaDAOImpl implements PolizaDAO {
 			Poliza poliza = jdbcTemplate.queryForObject(qryObtienePolizaPorIdFiliacion.toString(), new Object[] { idFiliacion }, new PolizaMapper());
 			mensajePolizaMemebresia.setPoliza(poliza);
 			mensajePolizaMemebresia.setBeneficios(consultaBeneficiosPorIdFiliacion(idFiliacion));
+			mensajePolizaMemebresia.setProgramas(consultaProgramasPorIdFiliacion(idFiliacion));
 		} catch (DataAccessException | SumarSaludException e) {
 			LOGGER.error("Error en la consulta de la poliza: " + e.getMessage());
 			throw new SumarSaludException("");
@@ -103,6 +106,32 @@ public class PolizaDAOImpl implements PolizaDAO {
 		}
 		
 		return beneficios;
+	}
+	
+	private List<Programa> consultaProgramasPorIdFiliacion(long idFiliacion) throws SumarSaludException {
+		StringBuilder qryObtieneProgramasPorIdFiliacion = new StringBuilder()
+			.append("SELECT pr.IDPROGRAMA AS IDPROGRAMA, pr.DESCRIPCION AS DESCRIPCION, pr.ORDEN AS ORDEN, ")
+			.append("       pr.FECHAHORAREGISTRO AS FECHAHORAREGISTRO, pr.FECHAHORAMODIFICACION AS FECHAHORAMODIFICACION, ")
+			.append("       pr.FECHAHORABAJA AS FECHAHORABAJA ")
+			.append("FROM paciente p ")
+			.append(" LEFT JOIN paciente_membresia pm ")
+			.append("  ON p.IDPACIENTE = pm.IDPACIENTE ")
+			.append(" LEFT JOIN membresia_programa mpr ")
+			.append("  ON pm.IDMEMBRESIA = mpr.IDMEMBRESIA ")
+			.append(" LEFT JOIN programa pr ")
+			.append("  ON mpr.IDPROGRAMA = pr.IDPROGRAMA ")
+			.append(" WHERE p.IDFILIACION = ? ")
+			.append(" ORDER BY pr.ORDEN ");
+		List<Programa> programas = null;
+		
+		try {
+			programas = jdbcTemplate.query(qryObtieneProgramasPorIdFiliacion.toString(), new Object[] { idFiliacion }, new ProgramaMapper());
+		} catch (DataAccessException dae) {
+			LOGGER.error("Exception", dae);
+			throw new SumarSaludException("Error en la consulta de los programas de la membresia: " + dae.getMessage());
+		}
+		
+		return programas;
 	}
 
 }

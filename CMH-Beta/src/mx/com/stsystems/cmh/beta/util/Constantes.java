@@ -9,6 +9,10 @@ public interface Constantes {
 	//CONSULTA HOSPITALES (CONSTANTES VARIOS)
 	public static final String CONSULTA_HOSPITAL_JSON_INVALIDO = "{\n\t\"hospitales\": null,\n\t\"estatus\": 3,\n\t\"mensaje\": \"Error de conversión del mensaje JSON\"\n}";
 	
+	//CONSULTA FOTO (CONSTANTES VARIOS)
+	public static final String CONSULTA_FOTO_JSON_INVALIDO = "{\n\t\"foto\": null,\n\t\"estatus\": 3,\n\t\"mensaje\": \"Error de conversión del mensaje JSON\"\n}";
+		
+	
 	//ESTATUS CONSULTA DE POLIZA
 	public static enum EstatusConsultaPoliza {
 		OK(0, "Póliza encontrada"),
@@ -68,7 +72,7 @@ public interface Constantes {
 		}
 
 		public static String getDay(int codigo){
-			for (EstatusConsultaPoliza estatusConsulta : EstatusConsultaPoliza.values()) {
+			for (EstatusConsultaHospital estatusConsulta : EstatusConsultaHospital.values()) {
 				if (estatusConsulta.getCodigo() == codigo) {
 					return estatusConsulta.getMensaje();
 				}
@@ -92,6 +96,50 @@ public interface Constantes {
 		public void setMensaje(String mensaje) {
 			this.mensaje = mensaje;
 		}
+	};
+	
+	//ESTATUS CONSULTA DE HOSPITALES
+	public static enum EstatusConsultaFoto {
+		OK(0, "Fotografía encontrada"),
+		NO_EXISTEN_ELEMENTOS(1, "La consulta no devolvió elementos"),
+		NO_EXISTE_LA_FOTO(2, "No existe la fotografía"),
+		ERROR_LEER_FOTO(3, "Error al leer la fotografía"),
+		ERROR_CONVERSION_JSON(4, "Error de conversión del mensaje JSON"),
+		ERROR_EN_CONSULTA_FOTO(99, "Error en la consulta de fotografías");
+
+		private int codigo;
+		private String mensaje;
+
+		EstatusConsultaFoto(int codigo,String mensaje){
+			this.codigo = codigo;
+			this.mensaje = mensaje;
+		}
+
+//		public static String getDay(int codigo){
+//			for (EstatusConsultaFoto estatusConsulta : EstatusConsultaFoto.values()) {
+//				if (estatusConsulta.getCodigo() == codigo) {
+//					return estatusConsulta.getMensaje();
+//				}
+//			}
+//
+//			return null;
+//		}
+
+		public int getCodigo() {
+			return this.codigo;
+		}
+
+//		public void setCodigo(int codigo) {
+//			this.codigo = codigo;
+//		}
+
+		public String getMensaje() {
+			return this.mensaje;
+		}
+
+//		public void setMensaje(String mensaje) {
+//			this.mensaje = mensaje;
+//		}
 	};
 	
 }
