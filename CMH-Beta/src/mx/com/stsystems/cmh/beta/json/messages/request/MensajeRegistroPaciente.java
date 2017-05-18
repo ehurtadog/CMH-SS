@@ -40,7 +40,6 @@ public class MensajeRegistroPaciente implements Serializable {
 	private String cancerFam;
 	private String infartoFam;
 	private int tipoAcceso;
-	@JsonIgnore
 	private String foto;
 	
 	public MensajeRegistroPaciente() {
@@ -377,6 +376,8 @@ public class MensajeRegistroPaciente implements Serializable {
 		builder.append(infartoFam);
 		builder.append(", tipoAcceso=");
 		builder.append(tipoAcceso);
+		builder.append(", foto=");
+		builder.append(foto);
 		builder.append("]");
 		return builder.toString();
 	}

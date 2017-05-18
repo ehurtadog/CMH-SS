@@ -1,6 +1,5 @@
 package mx.com.stsystems.cmh.beta.web.rest.api.resources.impl;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -62,16 +61,30 @@ public class RegistroResourceImpl {
 				idFiliacion = serviceController.registraPaciente(mensajeRegistroPaciente);
 				
 				try {
-					byte[] imageByteArray = decodeImage(mensajeRegistroPaciente.getFoto());
-					FileOutputStream imageOutFile;
-					imageOutFile = new FileOutputStream("/var/opt/appsumarsalud.com/resources/photos/" + idFiliacion + ".png");
-					imageOutFile.write(imageByteArray);
-					imageOutFile.close();
+					LOGGER.debug("[VAR] mensajeRegistroPaciente.getFoto(): " + mensajeRegistroPaciente.getFoto());
+					LOGGER.debug("[VAR] mensajeRegistroPaciente.getFoto().length(): " + mensajeRegistroPaciente.getFoto().length());
 					
-					mensajeRegistroPacienteResponse.setEstatus(0);
-					mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
-					mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
-					mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+					byte[] imageByteArray = decodeImage(mensajeRegistroPaciente.getFoto());
+					
+					LOGGER.debug("[VAR] imageByteArray.length: " + imageByteArray.length);
+					
+					if (imageByteArray.length > 0) {
+						FileOutputStream imageOutFile;
+						imageOutFile = new FileOutputStream("/var/opt/appsumarsalud.com/resources/photos/" + idFiliacion + ".png");
+						imageOutFile.write(imageByteArray);
+						imageOutFile.close();
+
+						mensajeRegistroPacienteResponse.setEstatus(0);
+						mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
+						mensajeRegistroPacienteResponse.setDescripcion("PACIENTE REGISTRADO CORRECTAMENTE");
+						mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+					} else {
+						mensajeRegistroPacienteResponse.setEstatus(2);
+						mensajeRegistroPacienteResponse.setIdFiliacion(idFiliacion);
+						mensajeRegistroPacienteResponse.setDescripcion("SE REGISTRO AL PACIENTE PERO SIN LA FOTO");
+						mensajeRegistroPacienteResponse.setComentarios("PACIENTE NUEVO");
+					}
+					
 				} catch (IOException ioe) {
 					LOGGER.warn("NO SE PUDO GUARDAR LA FOTO", ioe);
 					
@@ -108,6 +121,11 @@ public class RegistroResourceImpl {
 	}
 	
 	public static byte[] decodeImage(String imageDataString) {
-		return Base64.decodeBase64(imageDataString);
+		byte[] step = Base64.decodeBase64(imageDataString);
+		
+		LOGGER.debug("[VAR] imageDataString(decodeImage): " + imageDataString);
+		LOGGER.debug("[VAR] step.length: " + step.length);
+		
+		return step;
 	}
 }
