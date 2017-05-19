@@ -79,12 +79,17 @@ public class HospitalDAOImpl implements HospitalDAO, Constantes {
 		final StringBuilder QRY_CONSULTA_HOSPITAL_POR_LATITUD_LONGITUD = new StringBuilder()
 				.append("SELECT IDHOSPITAL, DESCRIPCION, URL, IDCIUDAD, IDMUNICIPIO, IDESTADO, LATITUD, LONGITUD ")
 				.append(" FROM hospital ")
-				.append(" WHERE LATITUD = ? AND ")
-				.append("       LONGITUD = ? ");
+				.append(" WHERE LATITUD BETWEEN ? AND ? AND ")
+				.append("       LONGITUD BETWEEN ? AND ? ");
 		List<Hospital> hospitales = null;
+		double latitudMinima = latitud - CONSULTA_HOSPITAL_COORDENADAS_ANGULO;
+		double latitudMaxima = latitud + CONSULTA_HOSPITAL_COORDENADAS_ANGULO;
+		double longitudMinima = longitud - CONSULTA_HOSPITAL_COORDENADAS_ANGULO;
+		double longitudMaxima = longitud + CONSULTA_HOSPITAL_COORDENADAS_ANGULO;
 			
 		try {
-			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOSPITAL_POR_LATITUD_LONGITUD.toString(),	new Object[] { latitud, longitud }, new HospitalMapper());
+			hospitales = jdbcTemplate.query(QRY_CONSULTA_HOSPITAL_POR_LATITUD_LONGITUD.toString(),	new Object[] { latitudMinima, 
+				latitudMaxima, longitudMinima, longitudMaxima }, new HospitalMapper());
 			
 			if ((hospitales == null) || (hospitales.isEmpty())) {
 				LOGGER.debug(EstatusConsultaHospital.NO_EXISTEN_ELEMENTOS.getMensaje());

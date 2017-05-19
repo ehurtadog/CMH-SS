@@ -8,6 +8,9 @@ public interface Constantes {
 	
 	//CONSULTA HOSPITALES (CONSTANTES VARIOS)
 	public static final String CONSULTA_HOSPITAL_JSON_INVALIDO = "{\n\t\"hospitales\": null,\n\t\"estatus\": 3,\n\t\"mensaje\": \"Error de conversión del mensaje JSON\"\n}";
+	public static final Double CONSULTA_HOSPITAL_COORDENADAS_RADIO = 20D;
+	public static final Double CONSULTA_HOSPITAL_COORDENADAS_UN_GRADO = 111D;
+	public static final double CONSULTA_HOSPITAL_COORDENADAS_ANGULO = CONSULTA_HOSPITAL_COORDENADAS_RADIO / CONSULTA_HOSPITAL_COORDENADAS_UN_GRADO;
 	
 	//CONSULTA FOTO (CONSTANTES VARIOS)
 	public static final String CONSULTA_FOTO_JSON_INVALIDO = "{\n\t\"foto\": null,\n\t\"estatus\": 3,\n\t\"mensaje\": \"Error de conversión del mensaje JSON\"\n}";
