@@ -277,6 +277,7 @@ public class ConsultaResourceImpl implements Constantes {
 			String imageDataString = encodeImage(imageData);
 			
 			LOGGER.debug("Tamaño de la foto: " + imageDataString.length());
+			LOGGER.debug("[VAR] imageDataString: <inicio>" + imageDataString + "<fin>");
 			
 			imageInFile.close();
 			
@@ -305,7 +306,8 @@ public class ConsultaResourceImpl implements Constantes {
 	}
 	
 	public static String encodeImage(byte[] imageByteArray) {
-		return Base64.encodeBase64URLSafeString(imageByteArray);
+//		return Base64.encodeBase64URLSafeString(imageByteArray);
+		return Base64.encodeBase64String(imageByteArray);
 	}
 	
 	public static byte[] decodeImage(String imageDataString) {
