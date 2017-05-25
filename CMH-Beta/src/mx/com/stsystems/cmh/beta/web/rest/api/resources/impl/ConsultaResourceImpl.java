@@ -29,6 +29,7 @@ import mx.com.stsystems.cmh.beta.exceptions.SumarSaludException;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeCodigPostal;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeConsultaHospital;
 import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPaciente;
+import mx.com.stsystems.cmh.beta.json.messages.request.MensajeRegistroPacienteBis;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajeHospitalResponse;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePhotoResponse;
 import mx.com.stsystems.cmh.beta.json.messages.response.MensajePolizaMembresia;
@@ -162,7 +163,8 @@ public class ConsultaResourceImpl implements Constantes {
 		
 		try {
 			MensajeRegistroPaciente registroPaciente = new MensajeRegistroPaciente(paciente, antecedente);
-			jsonInString = mapper.writeValueAsString(registroPaciente);
+			MensajeRegistroPacienteBis registroPacienteBis = new MensajeRegistroPacienteBis(registroPaciente);
+			jsonInString = mapper.writeValueAsString(registroPacienteBis);
 			
 			LOGGER.debug("VAR: jsonInString: " + jsonInString);
 		} catch (IOException ioe) {
@@ -204,7 +206,8 @@ public class ConsultaResourceImpl implements Constantes {
 		
 		try {
 			MensajeRegistroPaciente registroPaciente = new MensajeRegistroPaciente(paciente, antecedente);
-			jsonInString = mapper.writeValueAsString(registroPaciente);
+			MensajeRegistroPacienteBis registroPacienteBis = new MensajeRegistroPacienteBis(registroPaciente);
+			jsonInString = mapper.writeValueAsString(registroPacienteBis);
 			
 			LOGGER.debug("VAR: jsonInString: " + jsonInString);
 		} catch (IOException ioe) {

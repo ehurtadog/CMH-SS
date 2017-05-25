@@ -18,7 +18,7 @@ public class PhotoRestClient {
 
 	public static void main(String[] args) {
 		try {
-			String idFiliacion = "1705000005";
+			String idFiliacion = "1705000038";
 
 			Client client = Client.create();
 			WebResource webResource = client.resource("https://appsumarsalud.com/CMHBeta/rest/Consulta/Foto/" + idFiliacion);
